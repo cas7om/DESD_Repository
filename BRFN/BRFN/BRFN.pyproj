@@ -29,17 +29,31 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="manage.py" />
-    <Compile Include="BRFN\__init__.py" />
+    <Compile Include="BRFN\Applications\AccountManagment\admin.py" />
+    <Compile Include="BRFN\Applications\AccountManagment\apps.py" />
+    <Compile Include="BRFN\Applications\AccountManagment\migrations\__init__.py" />
+    <Compile Include="BRFN\Applications\AccountManagment\models.py" />
+    <Compile Include="BRFN\Applications\AccountManagment\tests.py" />
+    <Compile Include="BRFN\Applications\AccountManagment\views.py" />
+    <Compile Include="BRFN\Applications\AccountManagment\__init__.py" />
     <Compile Include="BRFN\settings.py" />
-    <Compile Include="BRFN\urls.py" />
-    <Compile Include="BRFN\wsgi.py" />
+    <Compile Include="manage.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BRFN\Templates\accounts\accounts.html" />
+    <Content Include="BRFN\Templates\base.html" />
+    <Content Include="BRFN\Templates\SharedComponents\navbar.html" />
+    <Content Include="BRFN\urls.py" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="BRFN\" />
+    <Folder Include="BRFN\Applications\AccountManagment\" />
+    <Folder Include="BRFN\Applications\AccountManagment\migrations\" />
+    <Folder Include="BRFN\Applications\" />
+    <Folder Include="BRFN\Templates\" />
+    <Folder Include="BRFN\Templates\accounts\" />
+    <Folder Include="BRFN\Templates\SharedComponents\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 
