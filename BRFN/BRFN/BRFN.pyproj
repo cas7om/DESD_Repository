@@ -52,6 +52,7 @@
   <ItemGroup>
     <Content Include="Applications\AccountManagement\templates\accounts.html" />
     <Content Include="docker-compose.yml" />
+    <Content Include="README.md" />
     <Content Include="templates\SharedComponents\base.html" />
     <Content Include="templates\SharedComponents\header.html" />
     <Content Include="templates\SharedComponents\navbar.html" />
