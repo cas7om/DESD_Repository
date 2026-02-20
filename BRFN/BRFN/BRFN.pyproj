@@ -31,33 +31,32 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BRFN\Applications\AccountManagment\admin.py" />
-    <Compile Include="BRFN\Applications\AccountManagment\apps.py" />
-    <Compile Include="BRFN\Applications\AccountManagment\migrations\__init__.py" />
-    <Compile Include="BRFN\Applications\AccountManagment\models.py" />
-    <Compile Include="BRFN\Applications\AccountManagment\tests.py" />
-    <Compile Include="BRFN\Applications\AccountManagment\urls.py" />
-    <Compile Include="BRFN\Applications\AccountManagment\views.py" />
-    <Compile Include="BRFN\Applications\AccountManagment\__init__.py" />
-    <Compile Include="BRFN\settings.py" />
+    <Compile Include="Applications\AccountManagment\admin.py" />
+    <Compile Include="Applications\AccountManagment\apps.py" />
+    <Compile Include="Applications\AccountManagment\migrations\__init__.py" />
+    <Compile Include="Applications\AccountManagment\models.py" />
+    <Compile Include="Applications\AccountManagment\tests.py" />
+    <Compile Include="Applications\AccountManagment\urls.py" />
+    <Compile Include="Applications\AccountManagment\views.py" />
+    <Compile Include="Applications\AccountManagment\__init__.py" />
+    <Compile Include="settings.py" />
     <Compile Include="manage.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BRFN\Templates\accounts\accounts.html" />
-    <Content Include="BRFN\Templates\base.html" />
-    <Content Include="BRFN\Templates\SharedComponents\header.html" />
-    <Content Include="BRFN\Templates\SharedComponents\navbar.html" />
-    <Content Include="BRFN\urls.py" />
+    <Content Include="Applications\AccountManagment\templates\accounts.html" />
+    <Content Include="Templates\SharedComponents\base.html" />
+    <Content Include="Templates\SharedComponents\header.html" />
+    <Content Include="Templates\SharedComponents\navbar.html" />
+    <Content Include="urls.py" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BRFN\" />
-    <Folder Include="BRFN\Applications\AccountManagment\" />
-    <Folder Include="BRFN\Applications\AccountManagment\migrations\" />
-    <Folder Include="BRFN\Applications\" />
-    <Folder Include="BRFN\Templates\" />
-    <Folder Include="BRFN\Templates\accounts\" />
-    <Folder Include="BRFN\Templates\SharedComponents\" />
+    <Folder Include="Applications\AccountManagment\" />
+    <Folder Include="Applications\AccountManagment\migrations\" />
+    <Folder Include="Applications\" />
+    <Folder Include="Applications\AccountManagment\templates\" />
+    <Folder Include="Templates\" />
+    <Folder Include="Templates\SharedComponents\" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="..\..\..\env\">

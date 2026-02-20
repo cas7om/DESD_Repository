@@ -1,6 +1,6 @@
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
 
 SECRET_KEY = "banana"
 DEBUG = True
@@ -14,8 +14,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # Better: point to the AppConfig (see note below)
-    "BRFN.Applications.AccountManagment.apps.AccountManagmentConfig",
+    "Applications.AccountManagment.apps.AccountManagmentConfig",
 ]
 
 MIDDLEWARE = [
@@ -28,13 +27,14 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "BRFN.urls"
+# FLAT LAYOUT
+ROOT_URLCONF = "urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "Templates"],
-        "APP_DIRS": True,
+        "DIRS": [BASE_DIR / "Templates"],   # shared templates here
+        "APP_DIRS": True,                   # also loads app/templates/
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -46,5 +46,21 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = "wsgi.application"
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
+USE_I18N = True
+USE_TZ = True
+
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
