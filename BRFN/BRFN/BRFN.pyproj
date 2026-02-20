@@ -17,7 +17,7 @@
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <LaunchProvider>Django launcher</LaunchProvider>
-    <DjangoSettingsModule>settings</DjangoSettingsModule>
+    <DjangoSettingsModule>config.settings</DjangoSettingsModule>
     <WebBrowserUrl>http://localhost</WebBrowserUrl>
     <OutputPath>.</OutputPath>
     <SuppressCollectPythonCloudServiceFiles>true</SuppressCollectPythonCloudServiceFiles>
@@ -31,38 +31,36 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Applications\AccountManagment\admin.py" />
-    <Compile Include="Applications\AccountManagment\apps.py" />
-    <Compile Include="Applications\AccountManagment\migrations\__init__.py" />
-    <Compile Include="Applications\AccountManagment\models.py" />
-    <Compile Include="Applications\AccountManagment\tests.py" />
-    <Compile Include="Applications\AccountManagment\urls.py" />
-    <Compile Include="Applications\AccountManagment\views.py" />
-    <Compile Include="Applications\AccountManagment\__init__.py" />
+    <Compile Include="Applications\AccountManagement\admin.py" />
+    <Compile Include="Applications\AccountManagement\apps.py" />
+    <Compile Include="Applications\Accountmanagement\migrations\__init__.py" />
+    <Compile Include="Applications\AccountManagement\models.py" />
+    <Compile Include="Applications\AccountManagement\tests.py" />
+    <Compile Include="Applications\AccountManagement\urls.py" />
+    <Compile Include="Applications\AccountManagement\views.py" />
+    <Compile Include="Applications\AccountManagement\__init__.py" />
     <Compile Include="config\asgi.py" />
     <Compile Include="config\settings.py" />
     <Compile Include="config\urls.py" />
     <Compile Include="config\wsgi.py" />
     <Compile Include="config\__init__.py" />
-    <Compile Include="settings.py" />
     <Compile Include="manage.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Applications\AccountManagment\templates\accounts.html" />
-    <Content Include="Templates\SharedComponents\base.html" />
-    <Content Include="Templates\SharedComponents\header.html" />
-    <Content Include="Templates\SharedComponents\navbar.html" />
-    <Content Include="urls.py" />
+    <Content Include="Applications\AccountManagement\templates\accounts.html" />
+    <Content Include="templates\SharedComponents\base.html" />
+    <Content Include="templates\SharedComponents\header.html" />
+    <Content Include="templates\SharedComponents\navbar.html" />
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Applications\AccountManagment\" />
-    <Folder Include="Applications\AccountManagment\migrations\" />
+    <Folder Include="Applications\AccountManagement\" />
+    <Folder Include="Applications\AccountManagement\migrations\" />
     <Folder Include="Applications\" />
-    <Folder Include="Applications\AccountManagment\templates\" />
+    <Folder Include="Applications\AccountManagement\templates\" />
     <Folder Include="config\" />
-    <Folder Include="Templates\" />
-    <Folder Include="Templates\SharedComponents\" />
+    <Folder Include="templates\" />
+    <Folder Include="templates\SharedComponents\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|VisualStudio|env (Python 3.14.3)" />
