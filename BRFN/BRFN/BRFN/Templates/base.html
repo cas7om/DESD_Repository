@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+<head>
+    <title>{% block title %}BRFN{% endblock %}</title>
+</head>
+<body>
+    {% include "SharedComponents/navbar.html" %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    {% include "SharedComponents/footer.html" %}
+</body>
+</html>
