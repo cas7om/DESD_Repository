@@ -36,6 +36,7 @@
     <Compile Include="BRFN\Applications\AccountManagment\migrations\__init__.py" />
     <Compile Include="BRFN\Applications\AccountManagment\models.py" />
     <Compile Include="BRFN\Applications\AccountManagment\tests.py" />
+    <Compile Include="BRFN\Applications\AccountManagment\urls.py" />
     <Compile Include="BRFN\Applications\AccountManagment\views.py" />
     <Compile Include="BRFN\Applications\AccountManagment\__init__.py" />
     <Compile Include="BRFN\settings.py" />
@@ -44,6 +45,7 @@
   <ItemGroup>
     <Content Include="BRFN\Templates\accounts\accounts.html" />
     <Content Include="BRFN\Templates\base.html" />
+    <Content Include="BRFN\Templates\SharedComponents\header.html" />
     <Content Include="BRFN\Templates\SharedComponents\navbar.html" />
     <Content Include="BRFN\urls.py" />
     <Content Include="requirements.txt" />

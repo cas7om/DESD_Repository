@@ -1,16 +1,40 @@
 from pathlib import Path
 
-
-DEBUG = True
-ALLOWED_HOSTS = []
-ROOT_URLCONF = "BRFN.urls"
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+SECRET_KEY = "banana"
+DEBUG = True
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+
+    # Better: point to the AppConfig (see note below)
+    "BRFN.Applications.AccountManagment.apps.AccountManagmentConfig",
+]
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+ROOT_URLCONF = "BRFN.urls"
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "Templates"], 
-        "APP_DIRS": True,                 
+        "DIRS": [BASE_DIR / "Templates"],
+        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
@@ -21,3 +45,6 @@ TEMPLATES = [
         },
     },
 ]
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
