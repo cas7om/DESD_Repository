@@ -82,7 +82,7 @@ DATABASES = {
         "NAME": "brfn_db",
         "USER": "brfn_postgres",
         "PASSWORD": "db_123",
-        "HOST": "db",
+        "HOST": "localhost",
         "PORT": "5432",
     }
 }

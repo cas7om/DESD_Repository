@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from .models import (
     User,
     Role, UserRole,
-    AddressType, Address, UserAddress,
+    Address, UserAddress,
     Business,
 )
 from .forms import (
@@ -40,10 +40,6 @@ def _ensure_lookups():
     # Roles (as per TC-022)
     for r in ["Customer", "Producer", "CommunityGroup", "Restaurant", "Admin"]:
         Role.objects.get_or_create(name=r)
-
-    # Address types
-    AddressType.objects.get_or_create(name="DELIVERY")
-    AddressType.objects.get_or_create(name="BUSINESS")
 
 
 # -----------------------------
@@ -97,8 +93,6 @@ def customer_register(request):
                 postcode=cd["postcode"],
             )
 
-            # 4) Link address as DELIVERY
-            delivery_type = AddressType.objects.get(name="DELIVERY")
             UserAddress.objects.create(user=user, address_type=delivery_type, address=delivery_addr)
 
             messages.success(request, "Customer account created successfully. You can now log in.")
@@ -147,7 +141,6 @@ def producer_register(request):
             )
 
             # 4) Link address to user as BUSINESS
-            business_type = AddressType.objects.get(name="BUSINESS")
             UserAddress.objects.create(user=user, address_type=business_type, address=business_addr)
 
             # 5) Create business referencing contact_user + business address
@@ -201,7 +194,7 @@ def logout_view(request):
 
 # -----------------------------
 # Keep your old create_user if you still want an admin-style manual add
-# (optional) – but it won’t create business/address links automatically.
+# (optional) â€“ but it wonâ€™t create business/address links automatically.
 # -----------------------------
 def user_create(request):
     """

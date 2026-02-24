@@ -4,7 +4,7 @@ class User(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=150, unique=True)
     phone_no = models.CharField(max_length=20, blank=True)
-    password_hash = models.CharField(max_length=300)
+    password_hash = models.CharField(max_length=300, default="")
 
     def __str__(self) -> str:
         return f"{self.full_name} ({self.email})"
