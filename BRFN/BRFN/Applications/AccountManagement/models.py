@@ -1,56 +1,190 @@
 from django.db import models
-from django.core.validators import MinValueValidator, EmailValidator
-
-class Address(models.Model):
-    address = models.TextField()
-    postcode = models.CharField(max_length=6)
-
-    class Meta:
-        verbose_name_plural = "Addresses"
-
-    def __str__(self):
-        return self.address
-
-class UserRole(models.Model):
-    user_role_name = models.CharField(max_length=50)
-
-    class Meta:
-        verbose_name_plural = "User Roles"
-        constraints = [
-            models.UniqueConstraint(fields=["user_role_name"], name="unique_role_name")
-        ]
-
-    def __str__(self):
-        return self.user_role_name
 
 class User(models.Model):
     full_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True, validators=[EmailValidator()])
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=15)
-    password = models.CharField(max_length=300)
-    user_role = models.ForeignKey(UserRole)
+    email = models.EmailField(max_length=150, unique=True)
+    phone_no = models.CharField(max_length=20, blank=True)
+    password_hash = models.CharField(max_length=300)  # store hashed password
+
+    def __str__(self) -> str:
+        return f"{self.full_name} ({self.email})"
+
+
+# -----------------------------
+# ROLES
+# -----------------------------
+class Role(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class UserRole(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_roles")
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, related_name="role_users")
 
     class Meta:
-        verbose_name_plural = "Users"
         constraints = [
-            models.UniqueConstraint(fields=["email"], name="unique_email")
+            models.UniqueConstraint(fields=["user", "role"], name="uq_user_role")
         ]
 
-    def __str__(self):
-        return self.full_name
+    def __str__(self) -> str:
+        return f"{self.user_id} -> {self.role.name}"
 
+
+# -----------------------------
+# ADDRESSES (delivery vs business)
+# -----------------------------
+class Address(models.Model):
+    line1 = models.CharField(max_length=80)
+    line2 = models.CharField(max_length=80, blank=True)
+    line3 = models.CharField(max_length=80, blank=True)
+    postcode = models.CharField(max_length=10)
+
+    def __str__(self) -> str:
+        return f"{self.line1}, {self.postcode}"
+
+
+class AddressType(models.Model):
+    name = models.CharField(max_length=30, unique=True)  # DELIVERY, BUSINESS
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class UserAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
+    address_type = models.ForeignKey(AddressType, on_delete=models.PROTECT)
+    address = models.ForeignKey(Address, on_delete=models.PROTECT)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["user", "address_type"], name="uq_user_addresstype")
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.user_id} [{self.address_type.name}] -> {self.address_id}"
+
+
+# -----------------------------
+# BUSINESS
+# -----------------------------
 class Business(models.Model):
-    contact = models.ForeignKey(User)
-    business_name = models.CharField(max_length=100)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    business_name = models.CharField(max_length=100, unique=True)
+    address = models.ForeignKey(Address, on_delete=models.PROTECT, related_name="businesses")
+    contact_user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="managed_businesses")
 
-    class Meta:
-        verbose_name_plural = "Businesses"
-        constraints = [
-            models.UniqueConstraint(fields=["business_name"], name="unique_business_name")
-        ]
-
-    def __str__(self):
+    def __str__(self) -> str:
         return self.business_name
 
+
+# -----------------------------
+# LOOKUPS
+# -----------------------------
+class ProductCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Unit(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class ProduceAvailability(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    is_available = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+# -----------------------------
+# PRODUCTS / STOCK
+# -----------------------------
+class Product(models.Model):
+    business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name="products")
+    category = models.ForeignKey(ProductCategory, on_delete=models.PROTECT)
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT)
+    availability = models.ForeignKey(ProduceAvailability, on_delete=models.PROTECT)
+
+    name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["business", "name"], name="uq_business_productname")
+        ]
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class StockItem(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name="stock")
+    quantity = models.DecimalField(max_digits=12, decimal_places=3)
+
+    def __str__(self) -> str:
+        return f"{self.product_id} qty={self.quantity}"
+
+
+# -----------------------------
+# ALLERGENS
+# -----------------------------
+class Allergen(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class ProductAllergen(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    allergen = models.ForeignKey(Allergen, on_delete=models.PROTECT)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["product", "allergen"], name="uq_product_allergen")
+        ]
+
+
+# -----------------------------
+# ORDERS
+# -----------------------------
+class OrderStatus(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class Order(models.Model):
+    order_ref = models.CharField(max_length=10, unique=True)
+    customer = models.ForeignKey(User, on_delete=models.PROTECT, related_name="orders")
+    status = models.ForeignKey(OrderStatus, on_delete=models.PROTECT)
+
+    confirmed_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    delivery_date = models.DateTimeField(null=True, blank=True)
+    delivery_instructions = models.CharField(max_length=300, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.order_ref
+
+
+class OrderLine(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="lines")
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+
+    quantity = models.DecimalField(max_digits=12, decimal_places=3)
+    unit_price_at_order = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["order", "product"], name="uq_order_product")
+        ]

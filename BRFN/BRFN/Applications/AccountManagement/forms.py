@@ -1,67 +1,69 @@
 from django import forms
-from django.core.exceptions import ValidationError
-from .models import User
+import re
 
-class UserForm(forms.ModelForm):
+
+PASSWORD_REGEX = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$")
+
+
+def validate_password_rules(pw: str) -> None:
     """
-    UserForm - Demonstrates basic ModelForm usage
+    TC-022: minimum length + complexity.
+    Example rule: >= 8 chars, at least 1 lower, 1 upper, 1 digit.
     """
-    # Optional: Override field to add custom widget or validation
-    email = forms.EmailField(
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Enter email address'
-        })
-    )
+    if not PASSWORD_REGEX.match(pw or ""):
+        raise forms.ValidationError(
+            "Password must be at least 8 characters and include an uppercase letter, "
+            "a lowercase letter, and a number."
+        )
 
-    class Meta:
-        model = User
-        fields = [
-            'first_name',
-            'last_name',
-            'email',
-            'phone',
-            'address'
-        ]
-        widgets = {
-            'first_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'First name'
-            }),
-            'last_name': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Last name'
-            }),
-            'phone': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': '+44 7XXX XXXXXX'
-            }),
-            'address': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 3,
-                'placeholder': 'Full address'
-            })
-        }
 
-    def clean_email(self):
-        """
-        Custom validation for email field
-        Demonstrates field-level validation
-        """
-        email = self.cleaned_data.get('email')
+class ProducerRegistrationForm(forms.Form):
+    business_name = forms.CharField(max_length=100)
 
-        # Check if email already exists (excluding current instance in edit mode)
-        if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
-            raise ValidationError('A user with this email already exists.')
+    contact_name = forms.CharField(max_length=100)
+    email = forms.EmailField(max_length=150)
+    phone_no = forms.CharField(max_length=20)
 
-        return email.lower()  # Normalise email to lowercase
+    # business address (TC-001 step 6)
+    line1 = forms.CharField(max_length=80, label="Business address line 1")
+    line2 = forms.CharField(max_length=80, required=False, label="Business address line 2")
+    line3 = forms.CharField(max_length=80, required=False, label="Business address line 3")
+    postcode = forms.CharField(max_length=10)
 
-    def clean_phone(self):
-        """Validate phone number format"""
-        phone = self.cleaned_data.get('phone')
-        if phone:
-            # Remove spaces and common separators
-            phone = phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
-            if not phone.isdigit() or len(phone) < 10:
-                raise ValidationError('Please enter a valid phone number (minimum 10 digits)')
-        return phone
+    password = forms.CharField(widget=forms.PasswordInput(), validators=[validate_password_rules])
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
+
+    def clean(self):
+        cd = super().clean()
+        if cd.get("password") and cd.get("confirm_password") and cd["password"] != cd["confirm_password"]:
+            raise forms.ValidationError("Passwords do not match.")
+        return cd
+
+
+class CustomerRegistrationForm(forms.Form):
+    full_name = forms.CharField(max_length=100)
+    email = forms.EmailField(max_length=150)
+    phone_no = forms.CharField(max_length=20)
+
+    # delivery address (TC-002 step 5-6)
+    line1 = forms.CharField(max_length=80, label="Delivery address line 1")
+    line2 = forms.CharField(max_length=80, required=False, label="Delivery address line 2")
+    line3 = forms.CharField(max_length=80, required=False, label="Delivery address line 3")
+    postcode = forms.CharField(max_length=10)
+
+    password = forms.CharField(widget=forms.PasswordInput(), validators=[validate_password_rules])
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
+
+    accept_terms = forms.BooleanField(required=True)
+
+    def clean(self):
+        cd = super().clean()
+        if cd.get("password") and cd.get("confirm_password") and cd["password"] != cd["confirm_password"]:
+            raise forms.ValidationError("Passwords do not match.")
+        return cd
+
+
+class LoginForm(forms.Form):
+    email = forms.EmailField(max_length=150)
+    password = forms.CharField(widget=forms.PasswordInput())
+    remember_me = forms.BooleanField(required=False)

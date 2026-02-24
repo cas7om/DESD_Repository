@@ -4,18 +4,49 @@
 
 {% block content %}
 <h1>Accounts Home</h1>
-<p>This is the account management page.</p>
+<p>This is the Account Management page.</p>
 
 <div class="col-md-4 text-end">
     <a href="{% url 'accounts:user_list' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> All Users
+        <i class="bi bi-people"></i> All Users
     </a>
 
     <a href="{% url 'accounts:user_create' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle"></i> New User
+        <i class="bi bi-plus-circle"></i> New User (Manual)
     </a>
 </div>
 
+<hr>
 
-  {% include "SharedComponents/header.html" with text="Welcome!" %}
+<h2>Registration (Test Cases)</h2>
+<p>Use these pages to satisfy TC-001 and TC-002.</p>
+
+<div class="col-md-4 text-end">
+    <a href="{% url 'accounts:customer_register' %}" class="btn btn-success">
+        <i class="bi bi-person-plus"></i> Register Customer (TC-002)
+    </a>
+
+    <a href="{% url 'accounts:producer_register' %}" class="btn btn-success">
+        <i class="bi bi-shop"></i> Register Producer (TC-001)
+    </a>
+</div>
+
+<hr>
+
+<h2>Authentication</h2>
+<p>Use these pages to satisfy TC-022 (login/session).</p>
+
+<div class="col-md-4 text-end">
+    <a href="{% url 'accounts:login' %}" class="btn btn-secondary">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+    </a>
+
+    <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-box-arrow-right"></i> Logout
+    </a>
+</div>
+
+<hr>
+
+{% include "SharedComponents/header.html" with text="Welcome!" %}
 {% endblock %}

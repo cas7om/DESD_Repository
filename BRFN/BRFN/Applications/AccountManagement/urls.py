@@ -4,7 +4,14 @@ from . import views
 app_name = "accounts"
 
 urlpatterns = [
-    path("", views.accounts_home, name="home"),
-    path("user/list/", views.user_list, name="user_list"),
-    path("user/create/", views.user_create, name="user_create"), 
+    path("", views.accounts_home, name="accounts_home"),
+    path("users/", views.user_list, name="user_list"),
+
+    # Registration (TC-001, TC-002)
+    path("register/customer/", views.customer_register, name="customer_register"),
+    path("register/producer/", views.producer_register, name="producer_register"),
+
+    # Auth (TC-022)
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
 ]
