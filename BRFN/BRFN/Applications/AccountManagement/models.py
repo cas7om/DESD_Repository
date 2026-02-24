@@ -4,15 +4,12 @@ class User(models.Model):
     full_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=150, unique=True)
     phone_no = models.CharField(max_length=20, blank=True)
-    password_hash = models.CharField(max_length=300)  # store hashed password
+    password_hash = models.CharField(max_length=300)
 
     def __str__(self) -> str:
         return f"{self.full_name} ({self.email})"
 
 
-# -----------------------------
-# ROLES
-# -----------------------------
 class Role(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -33,9 +30,6 @@ class UserRole(models.Model):
         return f"{self.user_id} -> {self.role.name}"
 
 
-# -----------------------------
-# ADDRESSES (delivery vs business)
-# -----------------------------
 class Address(models.Model):
     line1 = models.CharField(max_length=80)
     line2 = models.CharField(max_length=80, blank=True)
@@ -46,30 +40,14 @@ class Address(models.Model):
         return f"{self.line1}, {self.postcode}"
 
 
-class AddressType(models.Model):
-    name = models.CharField(max_length=30, unique=True)  # DELIVERY, BUSINESS
-
-    def __str__(self) -> str:
-        return self.name
-
-
 class UserAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="addresses")
-    address_type = models.ForeignKey(AddressType, on_delete=models.PROTECT)
     address = models.ForeignKey(Address, on_delete=models.PROTECT)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["user", "address_type"], name="uq_user_addresstype")
-        ]
 
     def __str__(self) -> str:
         return f"{self.user_id} [{self.address_type.name}] -> {self.address_id}"
 
 
-# -----------------------------
-# BUSINESS
-# -----------------------------
 class Business(models.Model):
     business_name = models.CharField(max_length=100, unique=True)
     address = models.ForeignKey(Address, on_delete=models.PROTECT, related_name="businesses")
@@ -79,9 +57,6 @@ class Business(models.Model):
         return self.business_name
 
 
-# -----------------------------
-# LOOKUPS
-# -----------------------------
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
@@ -104,9 +79,6 @@ class ProduceAvailability(models.Model):
         return self.name
 
 
-# -----------------------------
-# PRODUCTS / STOCK
-# -----------------------------
 class Product(models.Model):
     business = models.ForeignKey(Business, on_delete=models.CASCADE, related_name="products")
     category = models.ForeignKey(ProductCategory, on_delete=models.PROTECT)
@@ -133,9 +105,6 @@ class StockItem(models.Model):
         return f"{self.product_id} qty={self.quantity}"
 
 
-# -----------------------------
-# ALLERGENS
-# -----------------------------
 class Allergen(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -153,9 +122,6 @@ class ProductAllergen(models.Model):
         ]
 
 
-# -----------------------------
-# ORDERS
-# -----------------------------
 class OrderStatus(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
@@ -188,3 +154,6 @@ class OrderLine(models.Model):
         constraints = [
             models.UniqueConstraint(fields=["order", "product"], name="uq_order_product")
         ]
+
+    def __str__(self) -> str:
+        return f"OrderLine(order={self.order_id}, product={self.product_id}, qty={self.quantity})"
