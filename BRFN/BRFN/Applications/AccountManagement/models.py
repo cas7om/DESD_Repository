@@ -1,27 +1,56 @@
 from django.db import models
 from django.core.validators import MinValueValidator, EmailValidator
 
-# Create your models here.
-
-class User(models.Model):
-    """
-    user model - Base model with various field types
-    """
-
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True, validators=[EmailValidator()])
-    phone = models.CharField(max_length=15, blank=True)
+class Address(models.Model):
     address = models.TextField()
-    date_joined = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
+    postcode = models.CharField(max_length=6)
 
     class Meta:
-        ordering = ["-date_joined"]
-        verbose_name_plural = "Users"
+        verbose_name_plural = "Addresses"
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return self.address
 
-    def get_full_name(self):
-        return f"{self.first_name} {self.last_name}"
+class UserRole(models.Model):
+    user_role_name = models.CharField(max_length=50)
+
+    class Meta:
+        verbose_name_plural = "User Roles"
+        constraints = [
+            models.UniqueConstraint(fields=["user_role_name"], name="unique_role_name")
+        ]
+
+    def __str__(self):
+        return self.user_role_name
+
+class User(models.Model):
+    full_name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True, validators=[EmailValidator()])
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=15)
+    password = models.CharField(max_length=300)
+    user_role = models.ForeignKey(UserRole)
+
+    class Meta:
+        verbose_name_plural = "Users"
+        constraints = [
+            models.UniqueConstraint(fields=["email"], name="unique_email")
+        ]
+
+    def __str__(self):
+        return self.full_name
+
+class Business(models.Model):
+    contact = models.ForeignKey(User)
+    business_name = models.CharField(max_length=100)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Businesses"
+        constraints = [
+            models.UniqueConstraint(fields=["business_name"], name="unique_business_name")
+        ]
+
+    def __str__(self):
+        return self.business_name
+
