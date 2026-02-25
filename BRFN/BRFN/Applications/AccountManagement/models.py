@@ -45,7 +45,7 @@ class UserAddress(models.Model):
     address = models.ForeignKey(Address, on_delete=models.PROTECT)
 
     def __str__(self) -> str:
-        return f"{self.user_id} [{self.address_type.name}] -> {self.address_id}"
+        return f"{self.user_id} -> {self.address_id}"
 
 
 class Business(models.Model):

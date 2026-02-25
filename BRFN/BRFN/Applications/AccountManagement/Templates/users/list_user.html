@@ -10,9 +10,6 @@
             <h1><i class="bi bi-people"></i> Users</h1>
         </div>
         <div class="col-md-4 text-end">
-            <a href="{% url 'accounts:user_create' %}" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i> New User
-            </a>
         </div>
     </div>
 
@@ -89,9 +86,6 @@
             <div class="text-center py-5">
                 <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
                 <p class="text-muted mt-3">No users found.</p>
-                <a href="{% url 'accounts:user_create' %}" class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Create First User
-                </a>
             </div>
             {% endif %}
         </div>

@@ -93,7 +93,7 @@ def customer_register(request):
                 postcode=cd["postcode"],
             )
 
-            UserAddress.objects.create(user=user, address_type=delivery_type, address=delivery_addr)
+            UserAddress.objects.create(user=user, address=delivery_addr)
 
             messages.success(request, "Customer account created successfully. You can now log in.")
             return redirect("accounts:login")
@@ -141,7 +141,7 @@ def producer_register(request):
             )
 
             # 4) Link address to user as BUSINESS
-            UserAddress.objects.create(user=user, address_type=business_type, address=business_addr)
+            UserAddress.objects.create(user=user, address=business_addr)
 
             # 5) Create business referencing contact_user + business address
             Business.objects.create(
@@ -190,26 +190,3 @@ def logout_view(request):
     _logout_user(request)
     messages.success(request, "Logged out.")
     return redirect("accounts:login")
-
-
-# -----------------------------
-# Keep your old create_user if you still want an admin-style manual add
-# (optional) – but it won’t create business/address links automatically.
-# -----------------------------
-def user_create(request):
-    """
-    OPTIONAL: keep only if you want a basic CRUD 'create user' page.
-    It does NOT satisfy TC-001/TC-002 because it doesn't create address/business/roles.
-    """
-    from .forms import UserForm  # keep your existing form
-
-    if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            messages.success(request, f"User {user.full_name} created successfully!")
-            return redirect("accounts:user_list")
-    else:
-        form = UserForm()
-
-    return render(request, "users/create_user.html", {"form": form, "action": "Create"})

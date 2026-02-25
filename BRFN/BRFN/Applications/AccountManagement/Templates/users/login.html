@@ -1,0 +1,37 @@
+{% extends "SharedComponents/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h1>Login</h1>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        Email<br>
+        {{ form.email }}
+        {{ form.email.errors }}
+    </p>
+
+    <p>
+        Password<br>
+        {{ form.password }}
+        {{ form.password.errors }}
+    </p>
+
+    <p>
+        {{ form.remember_me }} Remember me
+        {{ form.remember_me.errors }}
+    </p>
+
+    {{ form.non_field_errors }}
+
+    <button type="submit">Login</button>
+</form>
+
+<p>
+    Don t have an account?
+    <a href="{% url 'accounts:customer_register' %}">Register as customer</a>
+</p>
+{% endblock %}
