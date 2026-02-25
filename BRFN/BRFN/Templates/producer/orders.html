@@ -1,0 +1,103 @@
+<!-- {# ==========================================================
+  PRODUCER: INCOMING ORDERS (TEAM NOTE)
+  - Test Case alignment:
+    - TC-009: Orders dashboard shows order id, status, customer, dates, items, total
+    - TC-010: Producer can update status (Pending -> Confirmed -> Ready -> Delivered)
+  - UI-only placeholders for dates/items until backend integration
+========================================================== #} -->
+
+{% extends "layouts/dash_base.html" %}
+{% block sidebar %}{% include "partials/sidebar_producer.html" %}{% endblock %}
+{% block page_title %}Incoming Orders{% endblock %}
+
+{% block page_actions %}
+  <div class="d-flex flex-wrap gap-2">
+    <select class="form-select form-select-sm" style="max-width: 180px;" disabled>
+      <option selected>Filter: All</option>
+      <option>Pending</option>
+      <option>Confirmed</option>
+      <option>Ready</option>
+      <option>Delivered</option>
+    </select>
+
+    <button class="ui-btn ui-btn--outline ui-btn--sm is-disabled" aria-disabled="true">Export (UI)</button>
+  </div>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Quick info (UI-only) -->
+<div class="card ui-card mb-3">
+  <div class="card-body d-flex flex-wrap gap-3 align-items-center">
+    <div>
+      <div class="ui-muted small">Lead time rule</div>
+      <div class="fw-semibold">Minimum 48 hours before delivery</div>
+    </div>
+    <div class="ms-auto ui-muted small">
+      UI-only now — backend will calculate dates and enforce rules.
+    </div>
+  </div>
+</div>
+
+<div class="card ui-card">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Status</th>
+          <th>Customer</th>
+          <th>Order date</th>
+          <th>Delivery date</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td class="fw-semibold">#{{ o.id }}</td>
+
+          <td>
+            {% include "partials/status_badge.html" with status=o.status %}
+          </td>
+
+          <td>{{ o.customer }}</td>
+
+          <!-- Uses real fields if backend provides them, otherwise shows — -->
+          <td class="ui-muted">{{ o.order_date|default:"—" }}</td>
+          <td class="ui-muted">{{ o.delivery_date|default:"—" }}</td>
+          <td class="ui-muted">
+            {% if o.items_count %}
+              {{ o.items_count }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
+
+          <td class="fw-semibold">{{ o.total }}</td>
+
+          <td class="text-end d-flex justify-content-end gap-2">
+            <a class="ui-btn ui-btn--outline ui-btn--sm" href="/producer/orders/{{ o.id }}/">View</a>
+            <a class="ui-btn ui-btn--primary ui-btn--sm" href="/producer/orders/{{ o.id }}/status/">Update</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if orders|length == 0 %}
+  <div class="card ui-card mt-3">
+    <div class="card-body">
+      <div class="fw-semibold">No incoming orders</div>
+      <div class="ui-muted">Orders will appear here when customers place them.</div>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,50 @@
+<!-- {# ==========================================================
+  SEARCH PAGE (TEAM NOTE)
+  - Test Case alignment:
+    - TC-005 Search: show results list and handle empty results gracefully
+  - Uses reusable product_card component for consistent UI
+========================================================== #} -->
+
+{% extends "layouts/market_base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-end mb-2">
+  <div>
+    <h1 class="h4 mb-1">Search</h1>
+    <div class="ui-muted">
+      Query:
+      {% if q %}
+        <strong>{{ q }}</strong>
+      {% else %}
+        <strong>(none)</strong>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <a class="ui-btn ui-btn--outline ui-btn--sm" href="/search/">Clear</a>
+    <a class="ui-btn ui-btn--outline ui-btn--sm" href="/">Back to Marketplace</a>
+  </div>
+</div>
+
+<div class="row g-3">
+  {% for p in products %}
+    {% include "partials/product_card.html" with p=p %}
+  {% endfor %}
+</div>
+
+{% if products|length == 0 %}
+  <div class="card ui-card mt-3">
+    <div class="card-body">
+      <div class="fw-semibold">No results found</div>
+      <div class="ui-muted">
+        Try a different keyword (product name, producer, or origin).
+      </div>
+      <a class="ui-btn ui-btn--outline ui-btn--sm mt-2" href="/">Browse categories</a>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

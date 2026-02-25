@@ -1,0 +1,140 @@
+<!-- {# ==========================================================
+  PRODUCER: ORDER DETAIL (TEAM NOTE)
+  - Test Case alignment: TC-009 (view order details)
+    Required UI fields:
+      - order id + status
+      - order date + delivery date
+      - customer contact + delivery address
+      - itemised list + total + special instructions
+  - Lead time: minimum 48 hours (displayed as an informational note)
+  - Backend team will later enforce the rule and populate real fields.
+========================================================== #} -->
+
+
+{% extends "layouts/dash_base.html" %}
+{% block sidebar %}{% include "partials/sidebar_producer.html" %}{% endblock %}
+{% block page_title %}Order #{{ order.id }}{% endblock %}
+
+{% block page_actions %}
+  {# TEAM NOTE: Status update screen is TC-010 (Pending -> Confirmed -> Ready -> Delivered) #}
+  <a class="ui-btn ui-btn--primary ui-btn--sm" href="/producer/orders/{{ order.id }}/status/">Update Status</a>
+  <a class="ui-btn ui-btn--outline ui-btn--sm" href="/producer/orders/">Back</a>
+{% endblock %}
+
+{% block content %}
+
+<!-- Summary -->
+<div class="row g-3 mb-3">
+  <div class="col-12 col-lg-8">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+          <div class="fw-semibold">Order #{{ order.id }}</div>
+
+          {# Consistent status badge (reused across list/detail/status pages) #}
+          {% include "partials/status_badge.html" with status=order.status %}
+        </div>
+
+        <div class="row g-2 mt-2">
+          <div class="col-12 col-md-4">
+            <div class="ui-muted small">Order date</div>
+            <div class="fw-semibold">{{ order.order_date|default:"—" }}</div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="ui-muted small">Delivery date</div>
+            <div class="fw-semibold">{{ order.delivery_date|default:"—" }}</div>
+          </div>
+          <div class="col-12 col-md-4">
+            <div class="ui-muted small">Total</div>
+            <div class="fw-semibold">{{ order.total }}</div>
+          </div>
+        </div>
+
+        <div class="alert alert-light border mt-3 mb-0">
+          <div class="small">
+            <strong>48-hour lead time rule:</strong>
+            Delivery must be at least 48 hours after the order is placed (UI-only note).
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer -->
+  <div class="col-12 col-lg-4">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="fw-semibold mb-2">Customer</div>
+        <div>{{ order.customer }}</div>
+        <div class="ui-muted small">Phone: {{ order.customer_phone|default:"—" }}</div>
+        <div class="ui-muted small">Email: {{ order.customer_email|default:"—" }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delivery address + instructions -->
+<div class="row g-3 mb-3">
+  <div class="col-12 col-lg-6">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="fw-semibold mb-2">Delivery address</div>
+        <div class="ui-muted">
+          {{ order.address_line1|default:"—" }}<br>
+          {{ order.address_line2|default:"" }}<br>
+          {{ order.postcode|default:"—" }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-6">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="fw-semibold mb-2">Special instructions</div>
+        <div class="ui-muted">
+          {{ order.instructions|default:"—" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Items table -->
+<div class="card ui-card">
+  <div class="card-body pb-0">
+    <div class="fw-semibold mb-2">Items</div>
+    <div class="ui-muted small">Itemised list for this order (UI-only until backend integration).</div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th class="text-end">Qty</th>
+          <th class="text-end">Unit price</th>
+          <th class="text-end">Line total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if order.items %}
+          {% for it in order.items %}
+          <tr>
+            <td>{{ it.name }}</td>
+            <td class="text-end">{{ it.qty }}</td>
+            <td class="text-end">{{ it.unit_price }}</td>
+            <td class="text-end fw-semibold">{{ it.line_total }}</td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="4" class="ui-muted">No items available (UI-only placeholder).</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

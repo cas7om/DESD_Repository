@@ -1,0 +1,102 @@
+/* =========================================================
+   BRFN UI Styles (TEAM NOTE)
+   - Purpose: keep UI consistent across templates (buttons, badges, cards)
+   - We prefix everything with "ui-" to avoid clashing with Bootstrap classes.
+   - Backend team can keep templates; only data-binding changes later.
+   ========================================================= */
+
+body { background: #fafafa; }
+
+/* Cards / tables */
+.ui-card { border-radius: 14px; }
+.card { border-radius: 14px; } /* keep Bootstrap cards consistent too */
+.table { margin-bottom: 0; }
+
+/* ---------------------------------------------------------
+   Buttons (use everywhere instead of repeating Bootstrap strings)
+   Example:
+     <a class="ui-btn ui-btn--primary ui-btn--sm" href="...">View</a>
+--------------------------------------------------------- */
+.ui-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  padding: .375rem .75rem;
+  border-radius: .5rem;
+  border: 1px solid transparent;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+}
+.ui-btn--sm{ padding: .25rem .55rem; font-size: .875rem; }
+.ui-btn--primary{
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+  color: #fff;
+}
+.ui-btn--primary:hover{ filter: brightness(.95); color:#fff; }
+.ui-btn--outline{
+  background: transparent;
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+.ui-btn--outline:hover{ background: var(--bs-light-bg-subtle); }
+.ui-btn--ghost{
+  background: transparent;
+  border-color: transparent;
+  color: var(--bs-body-color);
+}
+.ui-btn.is-disabled,
+.ui-btn[aria-disabled="true"]{
+  opacity: .6;
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+   Badges (status + availability)
+--------------------------------------------------------- */
+.ui-badge{
+  display: inline-flex;
+  align-items: center;
+  padding: .25rem .55rem;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ui-badge--available{
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text-emphasis);
+}
+.ui-badge--season{
+  background: var(--bs-success-bg-subtle);
+  color: var(--bs-success-text-emphasis);
+}
+.ui-badge--unavailable{
+  background: var(--bs-secondary-bg-subtle);
+  color: var(--bs-secondary-text-emphasis);
+}
+
+/* Order status */
+.ui-badge--pending{
+  background: var(--bs-warning-bg-subtle);
+  color: var(--bs-warning-text-emphasis);
+}
+.ui-badge--confirmed{
+  background: var(--bs-primary-bg-subtle);
+  color: var(--bs-primary-text-emphasis);
+}
+.ui-badge--ready{
+  background: var(--bs-success-bg-subtle);
+  color: var(--bs-success-text-emphasis);
+}
+.ui-badge--delivered{
+  background: var(--bs-secondary-bg-subtle);
+  color: var(--bs-secondary-text-emphasis);
+}
+
+/* Small helpers */
+.ui-muted { color: var(--bs-secondary-color); }

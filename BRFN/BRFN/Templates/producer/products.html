@@ -1,0 +1,132 @@
+<!-- {# ==========================================================
+  PRODUCER: PRODUCTS DASHBOARD (TEAM NOTE)
+  - Test Case alignment:
+    - TC-003: Add/Edit product entry points (button + edit links)
+    - TC-011: Inventory updates shown (stock + availability)
+    - TC-023: Low stock threshold shown (alerts derived from this)
+  - UI-only: numbers can be mock; backend will bind real fields later
+========================================================== #} -->
+
+{% extends "layouts/dash_base.html" %}
+{% block sidebar %}{% include "partials/sidebar_producer.html" %}{% endblock %}
+{% block page_title %}My Products{% endblock %}
+
+{% block page_actions %}
+  <a class="ui-btn ui-btn--primary ui-btn--sm" href="/producer/products/new/">+ Add Product</a>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Quick stats (UI-only) -->
+<div class="row g-3 mb-3">
+  <div class="col-12 col-md-3">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="ui-muted small">Total products</div>
+        <div class="h5 mb-0">{{ products|length }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="ui-muted small">In season</div>
+        <div class="h5 mb-0">—</div>
+        <div class="ui-muted small">UI-only</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="ui-muted small">Low stock alerts</div>
+        <div class="h5 mb-0">—</div>
+        <div class="ui-muted small">UI-only</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="ui-muted small">Unavailable</div>
+        <div class="h5 mb-0">—</div>
+        <div class="ui-muted small">UI-only</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card ui-card">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th style="min-width: 240px;">Product</th>
+          <th>Price</th>
+
+          <!-- TC-011 -->
+          <th>Availability</th>
+          <th>Stock</th>
+
+          <!-- TC-023 -->
+          <th>Low stock threshold</th>
+
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for p in products %}
+        <tr>
+          <td>
+            <div class="fw-semibold">{{ p.name }}</div>
+            <div class="ui-muted small">{{ p.producer }} • {{ p.origin|default:"—" }}</div>
+          </td>
+
+          <td class="fw-semibold">{{ p.price }}</td>
+
+          <td>
+            {% include "partials/availability_badge.html" with availability=p.availability %}
+          </td>
+
+          <td>
+            <div class="fw-semibold">{{ p.stock|default:"—" }}</div>
+            <div class="ui-muted small">UI-only</div>
+          </td>
+
+          <td>
+            <div class="fw-semibold">{{ p.low_stock_threshold|default:"10" }}</div>
+            <div class="ui-muted small">UI-only</div>
+          </td>
+
+          <td class="text-end">
+            <a class="ui-btn ui-btn--outline ui-btn--sm" href="/producer/products/{{ p.id }}/edit/">Edit</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Empty state -->
+{% if products|length == 0 %}
+  <div class="card ui-card mt-3">
+    <div class="card-body">
+      <div class="fw-semibold">No products yet</div>
+      <div class="ui-muted">Add your first product to start selling.</div>
+      <a class="ui-btn ui-btn--primary ui-btn--sm mt-2" href="/producer/products/new/">+ Add Product</a>
+    </div>
+  </div>
+{% endif %}
+
+<div class="mt-3 d-flex flex-wrap gap-2">
+  <a class="ui-btn ui-btn--outline ui-btn--sm" href="/producer/orders/">Go to Orders</a>
+  <a class="ui-btn ui-btn--outline ui-btn--sm" href="/producer/alerts/">View Low Stock Alerts</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+<!-- TEAM NOTE:
+Availability badge used across UI.
+Accepted values: Available | In Season | Unavailable
+-->
+
+{% with a=availability|default:"Available" %}
+  {% if a == "In Season" %}
+    <span class="ui-badge ui-badge--season">In Season</span>
+  {% elif a == "Unavailable" %}
+    <span class="ui-badge ui-badge--unavailable">Unavailable</span>
+  {% else %}
+    <span class="ui-badge ui-badge--available">Available</span>
+  {% endif %}
+{% endwith %}

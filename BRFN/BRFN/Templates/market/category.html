@@ -1,0 +1,49 @@
+
+<!-- {# ==========================================================
+  CATEGORY PAGE (TEAM NOTE)
+  - Test Case alignment:
+    - TC-004 Browse by category: show products with key info
+    - Hide "Unavailable" products (handled in views.py or product_card partial)
+  - Uses reusable product_card component to keep UI consistent
+========================================================== #} -->
+
+
+
+{% extends "layouts/market_base.html" %}
+{% block title %}Category{% endblock %}
+
+{% block content %}
+
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-end mb-2">
+  <div>
+    <h1 class="h4 mb-1 text-capitalize">{{ category }}</h1>
+    <p class="ui-muted mb-0">Showing products for this category (UI-only data for now).</p>
+  </div>
+
+  {# UI-only filter placeholder (backend can wire later) #}
+  <div class="d-flex gap-2">
+    <select class="form-select form-select-sm" style="max-width: 200px;" disabled>
+      <option selected>Filter: All</option>
+      <option>Available</option>
+      <option>In Season</option>
+    </select>
+  </div>
+</div>
+
+<div class="row g-3">
+  {% for p in products %}
+    {% include "partials/product_card.html" with p=p %}
+  {% endfor %}
+</div>
+
+{% if products|length == 0 %}
+  <div class="card ui-card mt-3">
+    <div class="card-body">
+      <div class="fw-semibold">No products found</div>
+      <div class="ui-muted">Try a different category or search from the navbar.</div>
+      <a class="ui-btn ui-btn--outline ui-btn--sm mt-2" href="/">Back to Marketplace</a>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

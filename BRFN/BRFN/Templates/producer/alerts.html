@@ -1,0 +1,53 @@
+<!-- {# PRODUCER: LOW STOCK ALERTS (TEAM NOTE)
+  UI-only. Backend later will compute threshold + active/resolved alerts.
+#} -->
+
+{% extends "layouts/dash_base.html" %}
+{% block sidebar %}{% include "partials/sidebar_producer.html" %}{% endblock %}
+{% block page_title %}Low Stock Alerts{% endblock %}
+
+{% block content %}
+
+
+<div class="card ui-card mb-3">
+  <div class="card-body">
+    <div class="ui-muted small">How this works</div>
+    <div class="fw-semibold">Alerts appear when stock drops below the threshold (UI-only).</div>
+  </div>
+</div>
+
+<div class="card ui-card">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th class="text-end">Remaining</th>
+          <th class="text-end">Threshold</th>
+          <th>Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in alerts %}
+        <tr>
+          <td class="fw-semibold">{{ a.product }}</td>
+          <td class="text-end">{{ a.remaining }}</td>
+          <td class="text-end">{{ a.threshold|default:"—" }}</td>
+          <td>
+            {% if a.level == "Critical" %}
+              <span class="ui-badge ui-badge--pending">Critical</span>
+            {% else %}
+              <span class="ui-badge ui-badge--confirmed">Low</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="ui-muted">No alerts right now.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

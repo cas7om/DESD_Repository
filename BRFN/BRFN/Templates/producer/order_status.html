@@ -1,0 +1,119 @@
+<!-- {# ==========================================================
+  PRODUCER: ORDER STATUS UPDATE (TEAM NOTE)
+  - Test Case alignment: TC-010
+    - Status progression must follow:
+      Pending -> Confirmed -> Ready -> Delivered
+    - Notes are optional
+    - Timeline/audit trail will be stored by backend later
+  - UI-only: form controls are disabled for now
+========================================================== #} -->
+
+{% extends "layouts/dash_base.html" %}
+{% block sidebar %}{% include "partials/sidebar_producer.html" %}{% endblock %}
+{% block page_title %}Update Status — Order #{{ order.id }}{% endblock %}
+
+{% block page_actions %}
+  <a class="ui-btn ui-btn--outline ui-btn--sm" href="/producer/orders/{{ order.id }}/">Back to Order</a>
+{% endblock %}
+
+{% block content %}
+
+
+<!-- Current summary -->
+<div class="card ui-card mb-3">
+  <div class="card-body">
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <div class="fw-semibold">Order #{{ order.id }}</div>
+
+      {# Consistent status badge #}
+      {% include "partials/status_badge.html" with status=order.status %}
+    </div>
+
+    <div class="ui-muted small mt-1">
+      Customer: {{ order.customer }} • Total: {{ order.total }}
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+
+  <!-- Status update form (UI-only) -->
+  <div class="col-12 col-lg-6">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="fw-semibold mb-2">Set new status</div>
+
+        <label class="form-label">Status progression</label>
+        <select class="form-select mb-3" disabled>
+          <option {% if order.status == "Pending" %}selected{% endif %}>Pending</option>
+          <option {% if order.status == "Confirmed" %}selected{% endif %}>Confirmed</option>
+          <option {% if order.status == "Ready" %}selected{% endif %}>Ready</option>
+          <option {% if order.status == "Delivered" %}selected{% endif %}>Delivered</option>
+        </select>
+
+        <label class="form-label">Notes (optional)</label>
+        <textarea class="form-control" rows="4" placeholder="e.g. Packed and ready for pickup at 4pm" disabled></textarea>
+
+        <div class="mt-3 d-flex gap-2">
+          <button class="ui-btn ui-btn--primary ui-btn--sm is-disabled" aria-disabled="true">Save (UI)</button>
+          <a class="ui-btn ui-btn--outline ui-btn--sm" href="/producer/orders/{{ order.id }}/">Cancel</a>
+        </div>
+
+        <div class="alert alert-light border mt-3 mb-0">
+          <div class="small">
+            <strong>Rule:</strong> Status should follow: Pending → Confirmed → Ready → Delivered.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline / audit trail (UI-only) -->
+  <div class="col-12 col-lg-6">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="fw-semibold mb-2">Timeline (audit trail)</div>
+
+        <div class="border-start ps-3">
+
+          {% if timeline %}
+            {# If views.py passes a timeline list, render it #}
+            {% for t in timeline %}
+              <div class="mb-3">
+                <div class="fw-semibold">{{ t.status }}</div>
+                <div class="ui-muted small">{{ t.note|default:"" }}{% if t.time %} • {{ t.time }}{% endif %}</div>
+              </div>
+            {% endfor %}
+          {% else %}
+            {# Fallback UI placeholder #}
+            <div class="mb-3">
+              <div class="fw-semibold">Pending</div>
+              <div class="ui-muted small">Order received • —</div>
+            </div>
+
+            <div class="mb-3">
+              <div class="fw-semibold">Confirmed</div>
+              <div class="ui-muted small">Producer confirmed • —</div>
+            </div>
+
+            <div class="mb-3">
+              <div class="fw-semibold">Ready</div>
+              <div class="ui-muted small">Packed / ready • —</div>
+            </div>
+
+            <div>
+              <div class="fw-semibold">Delivered</div>
+              <div class="ui-muted small">Completed • —</div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="ui-muted small mt-3">
+          UI-only now — backend will store timestamps + notes.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

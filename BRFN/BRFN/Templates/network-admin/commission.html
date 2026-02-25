@@ -1,0 +1,124 @@
+<!-- {# ==========================================================
+  ADMIN: COMMISSION REPORT (TEAM NOTE)
+  - Test Case alignment: TC-025
+    - Date range filter (UI)
+    - Total order value
+    - 5% commission calculation summary
+    - Producer payouts (95%) summary
+    - Breakdown by order + export option (UI)
+  - Backend team will replace mock rows/summary with real queries.
+========================================================== #} -->
+
+
+{% extends "layouts/dash_base.html" %}
+{% block sidebar %}{% include "partials/sidebar_admin.html" %}{% endblock %}
+{% block page_title %}Commission Report{% endblock %}
+
+{% block page_actions %}
+  <button class="ui-btn ui-btn--outline ui-btn--sm is-disabled" aria-disabled="true">Export CSV (UI)</button>
+{% endblock %}
+
+{% block content %}
+
+<!-- Date range filter (UI-only) -->
+<div class="card ui-card mb-3">
+  <div class="card-body">
+    <div class="row g-2 align-items-end">
+      <div class="col-12 col-md-4">
+        <label class="form-label">From</label>
+        <input class="form-control" type="date" disabled>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">To</label>
+        <input class="form-control" type="date" disabled>
+      </div>
+      <div class="col-12 col-md-4 d-flex gap-2">
+        <button class="ui-btn ui-btn--primary ui-btn--sm is-disabled w-100" aria-disabled="true">Filter (UI)</button>
+        <button class="ui-btn ui-btn--outline ui-btn--sm is-disabled w-100" aria-disabled="true">Monthly / YTD (UI)</button>
+      </div>
+    </div>
+    <div class="ui-muted small mt-2">UI-only now — backend will implement filtering and export.</div>
+  </div>
+</div>
+
+<!-- Summary cards (TC-025) -->
+<div class="row g-3 mb-3">
+  <div class="col-12 col-md-3">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="ui-muted small">Orders</div>
+        <div class="h5 mb-0">{{ summary.orders_count|default:"—" }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="ui-muted small">Total order value</div>
+        <div class="h5 mb-0">{{ summary.total_order_value|default:"—" }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="ui-muted small">Total commission (5%)</div>
+        <div class="h5 mb-0">{{ summary.total_commission|default:"—" }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-md-3">
+    <div class="card ui-card">
+      <div class="card-body">
+        <div class="ui-muted small">Producer payouts (95%)</div>
+        <div class="h5 mb-0">{{ summary.total_payout|default:"—" }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Breakdown table (TC-025) -->
+<div class="card ui-card">
+  <div class="card-body pb-0">
+    <div class="fw-semibold">Breakdown by order</div>
+    <div class="ui-muted small">Shows order totals, commission, and producer payouts.</div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th class="text-end">Order total</th>
+          <th class="text-end">Commission (5%)</th>
+          <th class="text-end">Producer payout (95%)</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if rows %}
+          {% for r in rows %}
+          <tr>
+            <td class="fw-semibold">#{{ r.order_id }}</td>
+            <td class="text-end">{{ r.order_total }}</td>
+            <td class="text-end">{{ r.commission }}</td>
+            <td class="text-end fw-semibold">{{ r.producer_payout }}</td>
+            <td class="text-end">
+              <button class="ui-btn ui-btn--outline ui-btn--sm is-disabled" aria-disabled="true">View (UI)</button>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5" class="ui-muted">No report data (UI-only placeholder).</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

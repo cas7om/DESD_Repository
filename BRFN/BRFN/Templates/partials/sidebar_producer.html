@@ -1,0 +1,25 @@
+<!-- {# ==========================================================
+  PRODUCER SIDEBAR (TEAM NOTE)
+  - Navigation for producer dashboard pages
+  - Test Case alignment:
+      - Products: add/edit + inventory updates
+      - Orders: view + status progression
+      - Payments: weekly settlements summary
+      - Alerts: low stock notifications
+  - Backend team can later restrict access by role (Producer only)
+========================================================== #} -->
+
+<div class="fw-semibold mb-1">Producer</div>
+<div class="ui-muted small mb-2">Manage products, orders, and stock</div>
+
+<div class="list-group list-group-flush">
+  <a class="list-group-item list-group-item-action" href="/producer/products/">
+    My Products
+  </a>
+  <a class="list-group-item list-group-item-action" href="/producer/orders/">
+    Incoming Orders
+  </a>
+  <a class="list-group-item list-group-item-action" href="/producer/alerts/">
+    Low Stock Alerts
+  </a>
+</div>

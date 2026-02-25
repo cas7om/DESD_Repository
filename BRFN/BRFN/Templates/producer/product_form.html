@@ -1,0 +1,187 @@
+<!-- {# ==========================================================
+  PRODUCER: PRODUCT FORM (TEAM NOTE)
+  - Test Case alignment:
+    - TC-003 Add New Product: name, category, description, price, unit,
+      availability, stock, allergen info, harvest date, optional image
+    - TC-011 Inventory update: stock >= 0, availability can be Unavailable
+    - TC-016 Seasonal availability: optional season window
+    - TC-023 Low stock alerts: threshold per product
+  - UI-only: inputs are disabled until backend wiring is complete
+========================================================== #} -->
+
+{% extends "layouts/dash_base.html" %}
+{% block sidebar %}{% include "partials/sidebar_producer.html" %}{% endblock %}
+{% block page_title %}{% if mode == "new" %}Add Product{% else %}Edit Product{% endif %}{% endblock %}
+
+{% block content %}
+
+
+<div class="card ui-card">
+  <div class="card-body">
+    <div class="row g-3">
+
+      <!-- Product name -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Product name</label>
+        <input class="form-control"
+               value="{% if product %}{{ product.name }}{% endif %}"
+               placeholder="e.g. Organic Tomatoes"
+               disabled>
+      </div>
+
+      <!-- Category -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Category</label>
+        <select class="form-select" disabled>
+          <option selected>Select category</option>
+          <option>Vegetables</option>
+          <option>Dairy</option>
+          <option>Bakery</option>
+          <option>Preserves</option>
+          <option>Seasonal</option>
+        </select>
+        <div class="form-text ui-muted">Used for browse-by-category in the marketplace.</div>
+      </div>
+
+      <!-- Price -->
+      <div class="col-12 col-md-3">
+        <label class="form-label">Price</label>
+        <input class="form-control"
+               value="{% if product %}{{ product.price }}{% endif %}"
+               placeholder="£0.00"
+               disabled>
+      </div>
+
+      <!-- Unit -->
+      <div class="col-12 col-md-3">
+        <label class="form-label">Unit</label>
+        <select class="form-select" disabled>
+          <option selected>per item</option>
+          <option>kg</option>
+          <option>g</option>
+          <option>litre</option>
+          <option>dozen</option>
+        </select>
+      </div>
+
+      <!-- Availability -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Availability</label>
+        <select class="form-select" disabled>
+          <option {% if product and product.availability == "Available" %}selected{% endif %}>Available</option>
+          <option {% if product and product.availability == "In Season" %}selected{% endif %}>In Season</option>
+          <option {% if product and product.availability == "Unavailable" %}selected{% endif %}>Unavailable</option>
+        </select>
+        <div class="form-text ui-muted">Unavailable items shouldn’t appear on customer pages.</div>
+      </div>
+
+      <!-- Seasonal window -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Season window (optional)</label>
+        <div class="row g-2">
+          <div class="col-6">
+            <select class="form-select" disabled>
+              <option selected>Start month</option>
+              <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
+              <option>May</option><option>Jun</option><option>Jul</option><option>Aug</option>
+              <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <select class="form-select" disabled>
+              <option selected>End month</option>
+              <option>Jan</option><option>Feb</option><option>Mar</option><option>Apr</option>
+              <option>May</option><option>Jun</option><option>Jul</option><option>Aug</option>
+              <option>Sep</option><option>Oct</option><option>Nov</option><option>Dec</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-text ui-muted">Helps show “In Season” in the marketplace.</div>
+      </div>
+
+      <!-- Description -->
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea class="form-control" rows="3" placeholder="Short product description..." disabled></textarea>
+      </div>
+
+      <!-- Stock quantity -->
+      <div class="col-12 col-md-4">
+        <label class="form-label">Stock quantity</label>
+        <input class="form-control" placeholder="e.g. 25" disabled>
+        <div class="form-text ui-muted">Stock must be 0 or greater.</div>
+      </div>
+
+      <!-- Low stock threshold -->
+      <div class="col-12 col-md-4">
+        <label class="form-label">Low stock threshold</label>
+        <input class="form-control" placeholder="e.g. 10" disabled>
+        <div class="form-text ui-muted">Triggers a low stock alert on dashboard.</div>
+      </div>
+
+      <!-- Harvest date -->
+      <div class="col-12 col-md-4">
+        <label class="form-label">Harvest date</label>
+        <input class="form-control" type="date" disabled>
+      </div>
+
+      <!-- Origin -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Farm origin / location</label>
+        <input class="form-control" placeholder="e.g. Somerset, UK" disabled>
+      </div>
+
+      <!-- Optional image -->
+      <div class="col-12 col-md-6">
+        <label class="form-label">Product image (optional)</label>
+        <input class="form-control" type="file" disabled>
+        <div class="form-text ui-muted">UI-only now — backend upload later.</div>
+      </div>
+
+      <!-- Allergens -->
+      <div class="col-12">
+        <label class="form-label">Allergen information</label>
+
+        <div class="row g-2">
+          <div class="col-12 col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" disabled>
+              <label class="form-check-label">Milk</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" disabled>
+              <label class="form-check-label">Eggs</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" disabled>
+              <label class="form-check-label">Nuts</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" disabled>
+              <label class="form-check-label">Gluten</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <input class="form-control" placeholder="Other allergens (optional)" disabled>
+          <div class="form-text ui-muted">Shown as a warning on the product page (TC-015).</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="col-12 d-flex gap-2">
+        <button class="ui-btn ui-btn--primary ui-btn--sm is-disabled" aria-disabled="true">Save (UI)</button>
+        <a class="ui-btn ui-btn--outline ui-btn--sm" href="/producer/products/">Back</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

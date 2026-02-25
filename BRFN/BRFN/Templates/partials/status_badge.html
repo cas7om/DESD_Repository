@@ -1,0 +1,16 @@
+<!-- {# TEAM NOTE:
+  Order status badge used on orders list + order detail + status update.
+  Status progression (TC-010): Pending -> Confirmed -> Ready -> Delivered
+#} -->
+
+{% if status == "Pending" %}
+  <span class="ui-badge ui-badge--pending">Pending</span>
+{% elif status == "Confirmed" %}
+  <span class="ui-badge ui-badge--confirmed">Confirmed</span>
+{% elif status == "Ready" %}
+  <span class="ui-badge ui-badge--ready">Ready</span>
+{% elif status == "Delivered" %}
+  <span class="ui-badge ui-badge--delivered">Delivered</span>
+{% else %}
+  <span class="ui-badge ui-badge--available">{{ status }}</span>
+{% endif %}
