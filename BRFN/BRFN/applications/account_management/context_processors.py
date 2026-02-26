@@ -1,6 +1,5 @@
 from .models import User
-
-SESSION_USER_ID_KEY = "auth_user_id"
+from config.constants import SESSION_USER_ID_KEY
 
 def current_user(request):
     user_id = request.session.get(SESSION_USER_ID_KEY)

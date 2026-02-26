@@ -4,7 +4,8 @@ from django.db import transaction
 from django.db.models import Prefetch
 from django.contrib.auth.hashers import make_password, check_password
 from functools import wraps
-
+from config.constants import SESSION_USER_ID_KEY
+from config.decorators import login_required, admin_required
 
 from .models import (
     User,
@@ -19,60 +20,17 @@ from .forms import (
     LoginForm,
 )
 
-
-# -----------------------------
-# Simple session auth (custom user model)
-# -----------------------------
-SESSION_USER_ID_KEY = "auth_user_id"
-
-def login_required(view_func):
-    @wraps(view_func)
-    def _wrapped(request, *args, **kwargs):
-        if not _current_user_id(request):
-            messages.error(request, "Please log in first.")
-            return redirect("accounts:login")
-        return view_func(request, *args, **kwargs)
-    return _wrapped
-
-
-def admin_required(view_func):
-    @wraps(view_func)
-    def _wrapped(request, *args, **kwargs):
-        user_id = request.session.get(SESSION_USER_ID_KEY)
-        user = User.objects.filter(id=user_id).first()
-
-        if not user:
-            messages.error(request, "Please log in first.")
-            return redirect("accounts:login")
-
-        if not user.has_role("Admin"):
-            messages.error(request, "You do not have permission to access this page.")
-            return redirect("accounts:accounts_home")
-
-        return view_func(request, *args, **kwargs)
-
-    return _wrapped
-
-
 def _login_user(request, user_id: int, remember_me: bool):
     request.session[SESSION_USER_ID_KEY] = user_id
     # remember_me => 14 days, else session cookie
     request.session.set_expiry(60 * 60 * 24 * 14 if remember_me else 0)
 
-
 def _logout_user(request):
     request.session.pop(SESSION_USER_ID_KEY, None)
-
-
-def _current_user_id(request):
-    return request.session.get(SESSION_USER_ID_KEY)
-
 
 def _ensure_lookups():
     for r in ["Customer", "Producer", "CommunityGroup", "Restaurant", "Admin"]:
         Role.objects.get_or_create(name=r)
-
-
 
 # region Pages
 # Pages
@@ -239,7 +197,7 @@ def login_view(request):
 
     return render(request, "users/login.html", {"form": form})
 
-
+@login_required
 def logout_view(request):
     _logout_user(request)
     messages.success(request, "Logged out.")

@@ -60,6 +60,8 @@
     <Compile Include="applications\order_management\views.py" />
     <Compile Include="applications\order_management\__init__.py" />
     <Compile Include="config\asgi.py" />
+    <Compile Include="config\constants.py" />
+    <Compile Include="config\decorators.py" />
     <Compile Include="config\settings.py" />
     <Compile Include="config\urls.py" />
     <Compile Include="config\wsgi.py" />
@@ -80,6 +82,7 @@
     <Content Include="applications\account_management\templates\users\list_user.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="applications\inventory_management\templates\allergens\create_allergen.html" />
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />
     <Content Include="static\brfn.css">
@@ -102,6 +105,7 @@
     <Folder Include="applications\inventory_management\" />
     <Folder Include="applications\inventory_management\migrations\" />
     <Folder Include="applications\inventory_management\templates\" />
+    <Folder Include="applications\inventory_management\templates\allergens\" />
     <Folder Include="applications\order_management\" />
     <Folder Include="applications\order_management\migrations\" />
     <Folder Include="applications\order_management\templates\" />
