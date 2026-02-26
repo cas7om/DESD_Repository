@@ -28,6 +28,7 @@ class BootstrapFormMixin:
                 widget.attrs["class"] = (widget.attrs.get("class", "") + " form-check-input").strip()
             else:
                 widget.attrs["class"] = (widget.attrs.get("class", "") + " form-control").strip()
+
 class ProducerRegistrationForm(BootstrapFormMixin,forms.Form):
     business_name = forms.CharField(max_length=100)
 
