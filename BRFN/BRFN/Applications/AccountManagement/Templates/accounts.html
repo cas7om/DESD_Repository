@@ -40,6 +40,7 @@
     <div class="card-header">
         <strong>Management</strong>
     </div>
+    {% if is_admin %}
     <div class="card-body">
         <p class="text-muted">Admin/management pages available after login.</p>
 
@@ -47,6 +48,27 @@
             <i class="bi bi-people"></i> View All Users
         </a>
     </div>
+    {% endif %}
+
+    {% if is_producer %}
+    <div class="card-body">
+        <p class="text-muted">No producer pages yet - try accessing view users to test auth.</p>
+
+        <a href="{% url 'accounts:user_list' %}" class="btn btn-primary">
+            <i class="bi bi-people"></i> View All Users
+        </a>
+    </div>
+    {% endif %}
+
+    {% if is_customer %}
+    <div class="card-body">
+        <p class="text-muted">No customer pages yet - try accessing view users to test auth.</p>
+
+        <a href="{% url 'accounts:user_list' %}" class="btn btn-primary">
+            <i class="bi bi-people"></i> View All Users
+        </a>
+    </div>
+    {% endif %}
 </div>
 
 <div class="alert alert-info">
@@ -72,7 +94,7 @@
             </a>
 
             <a href="{% url 'accounts:admin_register' %}" class="btn btn-success">
-                <i class="bi bi-shop"></i> Register Admin
+                <i class="bi bi-file-person"></i> Register Admin
             </a>
             <small>temp for demo</small>
         </div>
