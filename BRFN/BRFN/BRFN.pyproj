@@ -3,7 +3,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>BRFN</Name>
     <RootNamespace>BRFN</RootNamespace>
-    <InterpreterId>Global|PythonCore|3.9</InterpreterId>
+    <InterpreterId>Global|VisualStudio|env (Python 3.14.3)</InterpreterId>
     <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup>
@@ -45,6 +45,7 @@
     <Compile Include="Applications\account_management\__init__.py" />
     <Compile Include="applications\inventory_management\admin.py" />
     <Compile Include="applications\inventory_management\apps.py" />
+    <Compile Include="applications\inventory_management\forms.py" />
     <Compile Include="applications\inventory_management\migrations\__init__.py" />
     <Compile Include="applications\inventory_management\models.py" />
     <Compile Include="applications\inventory_management\tests.py" />
@@ -62,6 +63,7 @@
     <Compile Include="config\asgi.py" />
     <Compile Include="config\constants.py" />
     <Compile Include="config\decorators.py" />
+    <Compile Include="config\forms.py" />
     <Compile Include="config\settings.py" />
     <Compile Include="config\urls.py" />
     <Compile Include="config\wsgi.py" />
@@ -83,6 +85,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="applications\inventory_management\templates\allergens\create_allergen.html" />
+    <Content Include="applications\inventory_management\templates\inventory.html" />
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />
     <Content Include="static\brfn.css">

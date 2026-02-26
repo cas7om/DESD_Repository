@@ -16,7 +16,6 @@ def login_required(view_func):
         return view_func(request, *args, **kwargs)
     return _wrapped
 
-
 def admin_required(view_func):
     @wraps(view_func)
     def _wrapped(request, *args, **kwargs):
@@ -34,3 +33,10 @@ def admin_required(view_func):
         return view_func(request, *args, **kwargs)
 
     return _wrapped
+
+class BootstrapFormMixin:
+    """
+    Apply Bootstrap 5 classes to all Django form fields automatically.
+    """
+
+    

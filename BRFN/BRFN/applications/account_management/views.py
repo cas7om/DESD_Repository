@@ -39,7 +39,6 @@ def accounts_home(request):
     return render(request, "accounts.html")
 
 
-#NOt working properly and thats TC-022
 @admin_required 
 def user_list(request):
     users = (

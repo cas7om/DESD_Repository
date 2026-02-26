@@ -21,7 +21,6 @@ class Unit(models.Model):
             models.UniqueConstraint(fields=["name"], name="uq_unit_name")
         ]
 
-
     def __str__(self) -> str:
         return self.name
 
