@@ -3,7 +3,8 @@
 {% block title %}Create Allergen{% endblock %}
 
 {% block content %}
-<h1>Create an Allergen</h1>
+
+{% include "SharedComponents/base_title.html" with title="Create Allergen" %}
 
 <form method="post">
     {% csrf_token %}

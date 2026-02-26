@@ -3,7 +3,7 @@
 {% block title %}Producer Registration{% endblock %}
 
 {% block content %}
-<h1>Producer Registration</h1>
+{% include "SharedComponents/base_title.html" with title="Producer Registration" %}
 
 <form method="post">
     {% csrf_token %}

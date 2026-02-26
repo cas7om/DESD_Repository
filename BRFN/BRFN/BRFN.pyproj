@@ -98,6 +98,7 @@
     <Content Include="templates\SharedComponents\header.html" />
     <Content Include="templates\SharedComponents\navbar.html" />
     <Content Include="requirements.txt" />
+    <Content Include="templates\SharedComponents\base_title.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Applications\account_management\" />
