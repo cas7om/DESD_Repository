@@ -33,6 +33,7 @@
   <ItemGroup>
     <Compile Include="Applications\AccountManagement\admin.py" />
     <Compile Include="Applications\AccountManagement\apps.py" />
+    <Compile Include="Applications\AccountManagement\context_processors.py" />
     <Compile Include="Applications\AccountManagement\forms.py">
       <SubType>Code</SubType>
     </Compile>

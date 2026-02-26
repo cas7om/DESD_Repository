@@ -13,7 +13,6 @@
         </div>
     </div>
 
-    <!-- Statistics Cards -->
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="card stat-card">
@@ -33,7 +32,6 @@
         </div>
     </div>
 
-    <!-- Users Table -->
     <div class="card">
         <div class="card-header bg-primary text-white">
             <h5 class="mb-0"><i class="bi bi-table"></i> User List</h5>
@@ -48,34 +46,58 @@
                             <th>Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th>Roles</th>
+                            <th>Addresses</th>
+                            <th>Businesses</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for user in users %}
                         <tr>
                             <td><code>{{ user.id }}</code></td>
+
+                            <td><strong>{{ user.full_name }}</strong></td>
+
+                            <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+
+                            <td>{{ user.phone_no|default:"_" }}</td>
+
                             <td>
-                                <strong>{{ user.get_full_name }}</strong>
-                            </td>
-                            <td>
-                                <a href="mailto:{{ user.email }}">{{ user.email }}</a>
-                            </td>
-                            <td>{{ user.phone|default:"_" }}</td>
-                            <td>
-                                {% if user.is_active %}
-                                <span class="badge bg-success">Active</span>
+                                {% if user.user_roles.all %}
+                                {% for ur in user.user_roles.all %}
+                                <span class="badge bg-secondary">{{ ur.role.name }}</span>
+                                {% endfor %}
                                 {% else %}
-                                <span class="badge bg-danger">Inactive</span>
+                                <span class="text-muted">No roles</span>
                                 {% endif %}
                             </td>
-                            <td class="table-actions">
-                              
-                                    <i class="bi bi-eye"></i>
-                               
-                                    <i class="bi bi-pencil"></i>
-                               
+
+                            <td>
+                                {% if user.addresses.all %}
+                                {% for ua in user.addresses.all %}
+                                <div>
+                                    {{ ua.address.line1 }},
+                                    {% if ua.address.line2 %}{{ ua.address.line2 }},{% endif %}
+                                    {% if ua.address.line3 %}{{ ua.address.line3 }},{% endif %}
+                                    {{ ua.address.postcode }}
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <span class="text-muted">No address</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if user.managed_businesses.all %}
+                                {% for b in user.managed_businesses.all %}
+                                <div>
+                                    <strong>{{ b.business_name }}</strong>
+                                    ({{ b.address.postcode }})
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <span class="text-muted"> </span>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}

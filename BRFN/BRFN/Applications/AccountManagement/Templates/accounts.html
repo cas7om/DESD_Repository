@@ -3,46 +3,94 @@
 {% block title %}Accounts{% endblock %}
 
 {% block content %}
-<h1>Accounts Home</h1>
-<p>This is the Account Management page.</p>
+<div class="container" style="max-width: 900px; margin-top: 30px;">
 
-<div class="col-md-4 text-end">
-    <a href="{% url 'accounts:user_list' %}" class="btn btn-primary">
-        <i class="bi bi-people"></i> All Users
-    </a>
+    <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+            <h1 class="mb-1">Accounts Home</h1>
+
+            {% if is_logged_in %}
+            <p class="text-muted mb-0">
+                Signed in as <strong>{{ current_user.full_name }}</strong>
+            </p>
+            {% else %}
+            <p class="text-muted mb-0">
+                You are not signed in.
+            </p>
+            {% endif %}
+        </div>
+
+        <div class="d-flex gap-2">
+            {% if is_logged_in %}
+            <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+            {% else %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-secondary">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <hr>
+
+    {% if is_logged_in %}
+    <!-- Logged-in actions -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>Management</strong>
+        </div>
+        <div class="card-body">
+            <p class="text-muted">Admin/management pages available after login.</p>
+
+            <a href="{% url 'accounts:user_list' %}" class="btn btn-primary">
+                <i class="bi bi-people"></i> View All Users
+            </a>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        Tip: Use the Users page to verify joins (roles, addresses, business) are displayed correctly.
+    </div>
+
+    {% else %}
+    <!-- Guest actions -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>Registration (Test Cases)</strong>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-3">Use these pages to satisfy TC-001 and TC-002.</p>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'accounts:customer_register' %}" class="btn btn-success">
+                    <i class="bi bi-person-plus"></i> Register Customer (TC-002)
+                </a>
+
+                <a href="{% url 'accounts:producer_register' %}" class="btn btn-success"> 
+                    <i class="bi bi-shop"></i> Register Producer (TC-001)
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <strong>Authentication</strong>
+        </div>
+        <div class="card-body">
+            <p class="text-muted mb-3">Use this page to satisfy TC-022 (login/session).</p>
+
+            <a href="{% url 'accounts:login' %}" class="btn btn-secondary">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    <hr>
+
+    {% include "SharedComponents/header.html" with text="Welcome!" %}
 </div>
-
-<hr>
-
-<h2>Registration (Test Cases)</h2>
-<p>Use these pages to satisfy TC-001 and TC-002.</p>
-
-<div class="col-md-4 text-end">
-    <a href="{% url 'accounts:customer_register' %}" class="btn btn-success">
-        <i class="bi bi-person-plus"></i> Register Customer (TC-002)
-    </a>
-
-    <a href="{% url 'accounts:producer_register' %}" class="btn btn-success">
-        <i class="bi bi-shop"></i> Register Producer (TC-001)
-    </a>
-</div>
-
-<hr>
-
-<h2>Authentication</h2>
-<p>Use these pages to satisfy TC-022 (login/session).</p>
-
-<div class="col-md-4 text-end">
-    <a href="{% url 'accounts:login' %}" class="btn btn-secondary">
-        <i class="bi bi-box-arrow-in-right"></i> Login
-    </a>
-
-    <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary">
-        <i class="bi bi-box-arrow-right"></i> Logout
-    </a>
-</div>
-
-<hr>
-
-{% include "SharedComponents/header.html" with text="Welcome!" %}
 {% endblock %}

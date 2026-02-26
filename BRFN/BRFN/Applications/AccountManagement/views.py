@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import transaction
+from django.db.models import Prefetch
 from django.contrib.auth.hashers import make_password, check_password
+from functools import wraps
+
 
 from .models import (
     User,
@@ -21,6 +24,14 @@ from .forms import (
 # -----------------------------
 SESSION_USER_ID_KEY = "auth_user_id"
 
+def login_required(view_func):
+    @wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        if not _current_user_id(request):
+            messages.error(request, "Please log in first.")
+            return redirect("accounts:login")
+        return view_func(request, *args, **kwargs)
+    return _wrapped
 
 def _login_user(request, user_id: int, remember_me: bool):
     request.session[SESSION_USER_ID_KEY] = user_id
@@ -37,28 +48,35 @@ def _current_user_id(request):
 
 
 def _ensure_lookups():
-    # Roles (as per TC-022)
     for r in ["Customer", "Producer", "CommunityGroup", "Restaurant", "Admin"]:
         Role.objects.get_or_create(name=r)
 
 
-# -----------------------------
+
+# region Pages
 # Pages
 # -----------------------------
 def accounts_home(request):
-    # You already have accounts.html at app template root
     return render(request, "accounts.html")
 
 
+#NOt working properly and thats TC-022
+@login_required
 def user_list(request):
-    users = User.objects.all().order_by("id")
+    users = (
+        User.objects
+        .all()
+        .order_by("id")
+        .prefetch_related(
+            "user_roles__role",     # roles via UserRole
+            "addresses__address",   # addresses via UserAddress
+            "managed_businesses__address",  # businesses user manages + business address
+        )
+    )
     return render(request, "users/list_user.html", {"users": users})
 
 
-# -----------------------------
 # TC-002 Customer registration
-# Uses template: users/create_user.html (your existing file)
-# -----------------------------
 @transaction.atomic
 def customer_register(request):
     _ensure_lookups()
@@ -73,7 +91,6 @@ def customer_register(request):
                 form.add_error("email", "This email is already registered.")
                 return render(request, "users/create_user.html", {"form": form, "action": "Register"})
 
-            # 1) Create user
             user = User.objects.create(
                 full_name=cd["full_name"],
                 email=cd["email"],
@@ -81,11 +98,9 @@ def customer_register(request):
                 password_hash=make_password(cd["password"]),
             )
 
-            # 2) Assign customer role
             customer_role = Role.objects.get(name="Customer")
             UserRole.objects.create(user=user, role=customer_role)
 
-            # 3) Create delivery address
             delivery_addr = Address.objects.create(
                 line1=cd["line1"],
                 line2=cd.get("line2", "") or "",
@@ -102,11 +117,7 @@ def customer_register(request):
 
     return render(request, "users/create_user.html", {"form": form, "action": "Register"})
 
-
-# -----------------------------
 # TC-001 Producer registration
-# Uses template: users/create_producer.html (create this file)
-# -----------------------------
 @transaction.atomic
 def producer_register(request):
     _ensure_lookups()
@@ -120,7 +131,6 @@ def producer_register(request):
                 form.add_error("email", "This email is already registered.")
                 return render(request, "users/create_producer.html", {"form": form, "action": "Register"})
 
-            # 1) Create user (contact person)
             user = User.objects.create(
                 full_name=cd["contact_name"],
                 email=cd["email"],
@@ -128,11 +138,9 @@ def producer_register(request):
                 password_hash=make_password(cd["password"]),
             )
 
-            # 2) Assign producer role
             producer_role = Role.objects.get(name="Producer")
             UserRole.objects.create(user=user, role=producer_role)
 
-            # 3) Create business address
             business_addr = Address.objects.create(
                 line1=cd["line1"],
                 line2=cd.get("line2", "") or "",
@@ -140,10 +148,8 @@ def producer_register(request):
                 postcode=cd["postcode"],
             )
 
-            # 4) Link address to user as BUSINESS
             UserAddress.objects.create(user=user, address=business_addr)
 
-            # 5) Create business referencing contact_user + business address
             Business.objects.create(
                 business_name=cd["business_name"],
                 address=business_addr,
@@ -158,10 +164,7 @@ def producer_register(request):
     return render(request, "users/create_producer.html", {"form": form, "action": "Register"})
 
 
-# -----------------------------
 # TC-022 Login / Logout (session auth)
-# Uses template: users/login.html (recommended)
-# -----------------------------
 def login_view(request):
     _ensure_lookups()
 

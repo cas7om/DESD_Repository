@@ -15,9 +15,20 @@ def validate_password_rules(pw: str) -> None:
             "Password must be at least 8 characters and include an uppercase letter, "
             "a lowercase letter, and a number."
         )
+ #TODO:LEWIS 
+class BootstrapFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
+        for name, field in self.fields.items():
+            widget = field.widget
 
-class ProducerRegistrationForm(forms.Form):
+            # checkbox
+            if isinstance(widget, forms.CheckboxInput):
+                widget.attrs["class"] = (widget.attrs.get("class", "") + " form-check-input").strip()
+            else:
+                widget.attrs["class"] = (widget.attrs.get("class", "") + " form-control").strip()
+class ProducerRegistrationForm(BootstrapFormMixin,forms.Form):
     business_name = forms.CharField(max_length=100)
 
     contact_name = forms.CharField(max_length=100)
@@ -32,6 +43,7 @@ class ProducerRegistrationForm(forms.Form):
 
     password = forms.CharField(widget=forms.PasswordInput(), validators=[validate_password_rules])
     confirm_password = forms.CharField(widget=forms.PasswordInput())
+    accept_terms = forms.BooleanField(required=True)
 
     def clean(self):
         cd = super().clean()
@@ -40,7 +52,7 @@ class ProducerRegistrationForm(forms.Form):
         return cd
 
 
-class CustomerRegistrationForm(forms.Form):
+class CustomerRegistrationForm(BootstrapFormMixin,forms.Form):
     full_name = forms.CharField(max_length=100)
     email = forms.EmailField(max_length=150)
     phone_no = forms.CharField(max_length=20)
@@ -61,8 +73,8 @@ class CustomerRegistrationForm(forms.Form):
         if cd.get("password") and cd.get("confirm_password") and cd["password"] != cd["confirm_password"]:
             raise forms.ValidationError("Passwords do not match.")
         return cd
-
-
+    #TODO:LEWIS 
+   # Can use this BUT I used a page , but maybe just calling a form is better , up to you BootstrapFormMixin
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput())
