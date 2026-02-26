@@ -1,0 +1,1 @@
+SESSION_USER_ID_KEY = "auth_user_id"

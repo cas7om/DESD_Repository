@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 class AccountManagementConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "Applications.AccountManagement"
+    name = "applications.account_management"

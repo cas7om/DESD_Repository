@@ -1,0 +1,39 @@
+{% extends "SharedComponents/base.html" %}
+
+{% block title %}Producer Registration{% endblock %}
+
+{% block content %}
+{% include "SharedComponents/base_title.html" with title="Producer Registration" %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <fieldset>
+        <legend>Business</legend>
+        <p>Business name<br>{{ form.business_name }} {{ form.business_name.errors }}</p>
+        <p>Business address line 1<br>{{ form.line1 }} {{ form.line1.errors }}</p>
+        <p>Business address line 2<br>{{ form.line2 }} {{ form.line2.errors }}</p>
+        <p>Business address line 3<br>{{ form.line3 }} {{ form.line3.errors }}</p>
+        <p>Postcode<br>{{ form.postcode }} {{ form.postcode.errors }}</p>
+    </fieldset>
+
+    <fieldset>
+        <legend>Contact</legend>
+        <p>Contact name<br>{{ form.contact_name }} {{ form.contact_name.errors }}</p>
+        <p>Email<br>{{ form.email }} {{ form.email.errors }}</p>
+        <p>Phone<br>{{ form.phone_no }} {{ form.phone_no.errors }}</p>
+    </fieldset>
+
+    <fieldset>
+        <legend>Password</legend>
+        <p>Password<br>{{ form.password }} {{ form.password.errors }}</p>
+        <p>Confirm password<br>{{ form.confirm_password }} {{ form.confirm_password.errors }}</p>
+    </fieldset>
+
+    <p>{{ form.accept_terms }} I accept the terms and conditions {{ form.accept_terms.errors }}</p>
+
+    {{ form.non_field_errors }}
+
+    <button class="btn btn-primary" type="submit">Create Producer Account</button>
+</form>
+{% endblock %}

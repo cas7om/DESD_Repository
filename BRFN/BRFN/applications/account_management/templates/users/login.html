@@ -1,0 +1,81 @@
+{% extends "SharedComponents/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 480px; margin-top: 40px;">
+
+    <h1 class="mb-4">Login</h1>
+
+    {% if is_logged_in %}
+    <div class="alert alert-success">
+        You are already logged in as <strong>{{ current_user.full_name }}</strong>.
+    </div>
+
+    <div class="d-flex gap-2">
+        <a href="{% url 'accounts:accounts_home' %}" class="btn btn-primary">
+            Go to Accounts Home
+        </a>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-outline-secondary">
+            Logout
+        </a>
+    </div>
+
+    {% else %}
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            {{ form.email }}
+            <div class="text-danger small">
+                {{ form.email.errors }}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            {{ form.password }}
+            <div class="text-danger small">
+                {{ form.password.errors }}
+            </div>
+        </div>
+
+        <div class="mb-3 form-check">
+            {{ form.remember_me }}
+            <label class="form-check-label">Remember me</label>
+            <div class="text-danger small">
+                {{ form.remember_me.errors }}
+            </div>
+        </div>
+
+        <div class="text-danger mb-3">
+            {{ form.non_field_errors }}
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">
+            Login
+        </button>
+    </form>
+
+    <hr>
+
+    <p class="text-center">
+        Don't have an account?
+        <a href="{% url 'accounts:customer_register' %}">Register as customer</a>
+    </p>
+
+    <p class="text-center">
+        Or
+        <a href="{% url 'accounts:producer_register' %}">Register as producer</a>
+    </p>
+
+    <p class="text-center">
+        Or
+        <a href="{% url 'accounts:admin_register' %}">Register as an admin</a>
+    </p>
+    {% endif %}
+
+</div>
+{% endblock %}

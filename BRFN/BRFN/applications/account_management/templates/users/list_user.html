@@ -1,0 +1,110 @@
+{% extends "SharedComponents/base.html" %}
+
+{% block title %}Accounts{% endblock %}
+
+{% block content %}
+
+{% include "SharedComponents/base_title.html" with title="Users" %}
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted">Total Users</h6>
+                <h2>{{ users|length }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card" style="border-left-color: #198754;">
+            <div class="card-body">
+                <h6 class="text-muted">Active Users</h6>
+                <h2>{{ users|length }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-table"></i> User List</h5>
+    </div>
+    <div class="card-body">
+        {% if users %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Roles</th>
+                        <th>Addresses</th>
+                        <th>Businesses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td><code>{{ user.id }}</code></td>
+
+                        <td><strong>{{ user.full_name }}</strong></td>
+
+                        <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+
+                        <td>{{ user.phone_no|default:"_" }}</td>
+
+                        <td>
+                            {% if user.user_roles.all %}
+                            {% for ur in user.user_roles.all %}
+                            <span class="badge bg-secondary">{{ ur.role.name }}</span>
+                            {% endfor %}
+                            {% else %}
+                            <span class="text-muted">No roles</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if user.addresses.all %}
+                            {% for ua in user.addresses.all %}
+                            <div>
+                                {{ ua.address.line1 }},
+                                {% if ua.address.line2 %}{{ ua.address.line2 }},{% endif %}
+                                {% if ua.address.line3 %}{{ ua.address.line3 }},{% endif %}
+                                {{ ua.address.postcode }}
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <span class="text-muted">No address</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if user.managed_businesses.all %}
+                            {% for b in user.managed_businesses.all %}
+                            <div>
+                                <strong>{{ b.business_name }}</strong>
+                                ({{ b.address.postcode }})
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <span class="text-muted"> </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="text-muted mt-3">No users found.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+  {% include "SharedComponents/header.html" with text="Welcome!" %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "SharedComponents/base.html" %}
+
+{% block title %}Accounts{% endblock %}
+
+{% block content %}
+
+{% include "SharedComponents/base_title.html" with title="Inventory Home" %}
+
+<hr>
+
+{% if is_logged_in %}
+<div class="card mb-4">
+    <div class="card-header">
+        <strong>Management</strong>
+    </div>
+    {% if is_admin %}
+    <div class="card-body">
+        <a href="{% url 'inventory:create_allergen' %}" class="btn btn-primary">
+            <i class="bi bi-people"></i> Add Allergen
+        </a>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        You do not have permissions for this feature.
+    </div>
+    {% endif %}
+</div>
+
+{% else %}
+<div class="card mb-4">
+    <div class="alert alert-info">
+        Please login to access this feature.
+    </div>
+</div>
+{% endif %}
+
+<hr>
+
+{% endblock %}

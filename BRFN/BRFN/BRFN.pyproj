@@ -3,7 +3,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>BRFN</Name>
     <RootNamespace>BRFN</RootNamespace>
-    <InterpreterId>Global|VisualStudio|env (Python 3.14.3)</InterpreterId>
+    <InterpreterId>Global|PythonCore|3.9</InterpreterId>
     <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup>
@@ -31,18 +31,40 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Applications\AccountManagement\admin.py" />
-    <Compile Include="Applications\AccountManagement\apps.py" />
-    <Compile Include="Applications\AccountManagement\forms.py">
+    <Compile Include="Applications\account_management\admin.py" />
+    <Compile Include="Applications\account_management\apps.py" />
+    <Compile Include="Applications\account_management\context_processors.py" />
+    <Compile Include="Applications\account_management\forms.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Applications\Accountmanagement\migrations\__init__.py" />
-    <Compile Include="Applications\AccountManagement\models.py" />
-    <Compile Include="Applications\AccountManagement\tests.py" />
-    <Compile Include="Applications\AccountManagement\urls.py" />
-    <Compile Include="Applications\AccountManagement\views.py" />
-    <Compile Include="Applications\AccountManagement\__init__.py" />
+    <Compile Include="applications\account_management\migrations\__init__.py" />
+    <Compile Include="Applications\account_management\models.py" />
+    <Compile Include="Applications\account_management\tests.py" />
+    <Compile Include="Applications\account_management\urls.py" />
+    <Compile Include="Applications\account_management\views.py" />
+    <Compile Include="Applications\account_management\__init__.py" />
+    <Compile Include="applications\inventory_management\admin.py" />
+    <Compile Include="applications\inventory_management\apps.py" />
+    <Compile Include="applications\inventory_management\forms.py" />
+    <Compile Include="applications\inventory_management\migrations\__init__.py" />
+    <Compile Include="applications\inventory_management\models.py" />
+    <Compile Include="applications\inventory_management\tests.py" />
+    <Compile Include="applications\inventory_management\urls.py" />
+    <Compile Include="applications\inventory_management\views.py" />
+    <Compile Include="applications\inventory_management\__init__.py" />
+    <Compile Include="applications\order_management\admin.py" />
+    <Compile Include="applications\order_management\apps.py" />
+    <Compile Include="applications\order_management\migrations\__init__.py" />
+    <Compile Include="applications\order_management\models.py" />
+    <Compile Include="applications\order_management\tests.py" />
+    <Compile Include="applications\order_management\urls.py" />
+    <Compile Include="applications\order_management\views.py" />
+    <Compile Include="applications\order_management\__init__.py" />
+    <Compile Include="applications\__init__.py" />
     <Compile Include="config\asgi.py" />
+    <Compile Include="config\constants.py" />
+    <Compile Include="config\decorators.py" />
+    <Compile Include="config\forms.py" />
     <Compile Include="config\settings.py" />
     <Compile Include="config\urls.py" />
     <Compile Include="config\wsgi.py" />
@@ -53,31 +75,53 @@
     <Compile Include="manage.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Applications\AccountManagement\templates\accounts.html" />
-    <Content Include="Applications\AccountManagement\templates\users\create_user.html">
+    <Content Include="applications\account_management\templates\accounts.html" />
+    <Content Include="applications\account_management\templates\users\create_admin.html" />
+    <Content Include="applications\account_management\templates\users\create_producer.html" />
+    <Content Include="applications\account_management\templates\users\create_customer.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Applications\AccountManagement\templates\users\list_user.html">
+    <Content Include="applications\account_management\templates\users\login.html" />
+    <Content Include="applications\account_management\templates\users\list_user.html">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="applications\inventory_management\templates\allergens\create_allergen.html" />
+    <Content Include="applications\inventory_management\templates\inventory.html" />
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />
+    <Content Include="static\brfn.css">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="static\brfn.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="templates\SharedComponents\base.html" />
     <Content Include="templates\SharedComponents\header.html" />
     <Content Include="templates\SharedComponents\navbar.html" />
     <Content Include="requirements.txt" />
+    <Content Include="templates\SharedComponents\base_title.html" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Applications\AccountManagement\" />
-    <Folder Include="Applications\AccountManagement\migrations\" />
-    <Folder Include="Applications\" />
-    <Folder Include="Applications\AccountManagement\templates\" />
-    <Folder Include="Applications\AccountManagement\templates\users\" />
+    <Folder Include="Applications\account_management\" />
+    <Folder Include="applications\account_management\migrations\" />
+    <Folder Include="applications\" />
+    <Folder Include="applications\account_management\templates\" />
+    <Folder Include="applications\account_management\templates\users\" />
+    <Folder Include="applications\inventory_management\" />
+    <Folder Include="applications\inventory_management\migrations\" />
+    <Folder Include="applications\inventory_management\templates\" />
+    <Folder Include="applications\inventory_management\templates\allergens\" />
+    <Folder Include="applications\order_management\" />
+    <Folder Include="applications\order_management\migrations\" />
+    <Folder Include="applications\order_management\templates\" />
     <Folder Include="config\" />
+    <Folder Include="static\" />
     <Folder Include="templates\" />
     <Folder Include="templates\SharedComponents\" />
   </ItemGroup>
   <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.13" />
+    <InterpreterReference Include="Global|PythonCore|3.9" />
     <InterpreterReference Include="Global|VisualStudio|env (Python 3.14.3)" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />

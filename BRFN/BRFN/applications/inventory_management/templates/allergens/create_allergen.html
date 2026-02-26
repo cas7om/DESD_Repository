@@ -1,0 +1,21 @@
+{% extends "SharedComponents/base.html" %}
+
+{% block title %}Create Allergen{% endblock %}
+
+{% block content %}
+
+{% include "SharedComponents/base_title.html" with title="Create Allergen" %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <fieldset>
+        <legend>Allergen Details</legend>
+        <p>Allergen Name<br>{{ form.name }} {{ form.name.errors }}</p>
+    </fieldset>
+
+    {{ form.non_field_errors }}
+
+    <button class="btn btn-primary" type="submit">Create Allergen</button>
+</form>
+{% endblock %}

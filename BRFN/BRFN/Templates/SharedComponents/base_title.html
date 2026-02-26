@@ -1,0 +1,15 @@
+<div class="d-flex justify-content-between align-items-start mb-3">
+    <div>
+        <h1 class="mb-1">{{ title }}</h1>
+
+        {% if is_logged_in %}
+        <p class="text-muted mb-0">
+            Signed in as <strong>{{ current_user.full_name }}</strong>
+        </p>
+        {% else %}
+        <p class="text-muted mb-0">
+            You are not signed in.
+        </p>
+        {% endif %}
+    </div>
+</div>
