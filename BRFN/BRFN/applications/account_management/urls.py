@@ -15,7 +15,7 @@ urlpatterns = [
     path("register/admin/", views.admin_register, name="admin_register"),
 
 
-    # Auth (TC-022)
+    # Auth (TC-022) 
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
 ]

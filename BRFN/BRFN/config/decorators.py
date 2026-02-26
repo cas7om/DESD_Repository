@@ -27,7 +27,26 @@ def admin_required(view_func):
             return redirect("accounts:login")
 
         if not user.has_role("Admin"):
-            messages.error(request, "You do not have permission to access this page.")
+            messages.error(request, "You do not have admin permissions to access this page.")
+            return redirect("accounts:accounts_home")
+
+        return view_func(request, *args, **kwargs)
+
+    return _wrapped
+
+# "Customer", "Producer", "CommunityGroup", "Restaurant", "Admin"
+def producer_required(view_func):
+    @wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        user_id = request.session.get(SESSION_USER_ID_KEY)
+        user = User.objects.filter(id=user_id).first()
+
+        if not user:
+            messages.error(request, "Please log in first.")
+            return redirect("accounts:login")
+
+        if not user.has_role("Producer"):
+            messages.error(request, "You do not have producer permissions to access this page.")
             return redirect("accounts:accounts_home")
 
         return view_func(request, *args, **kwargs)
