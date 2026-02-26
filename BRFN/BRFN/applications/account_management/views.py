@@ -110,7 +110,7 @@ def customer_register(request):
             # enforce unique email
             if User.objects.filter(email=cd["email"]).exists():
                 form.add_error("email", "This email is already registered.")
-                return render(request, "users/create_user.html", {"form": form, "action": "Register"})
+                return render(request, "users/create_customer.html", {"form": form, "action": "Register"})
 
             user = User.objects.create(
                 full_name=cd["full_name"],
@@ -136,7 +136,7 @@ def customer_register(request):
     else:
         form = CustomerRegistrationForm()
 
-    return render(request, "users/create_user.html", {"form": form, "action": "Register"})
+    return render(request, "users/create_customer.html", {"form": form, "action": "Register"})
 
 # TC-001 Producer registration
 @transaction.atomic

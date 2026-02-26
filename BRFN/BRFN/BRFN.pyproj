@@ -31,18 +31,26 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Applications\AccountManagement\admin.py" />
-    <Compile Include="Applications\AccountManagement\apps.py" />
-    <Compile Include="Applications\AccountManagement\context_processors.py" />
-    <Compile Include="Applications\AccountManagement\forms.py">
+    <Compile Include="Applications\account_management\admin.py" />
+    <Compile Include="Applications\account_management\apps.py" />
+    <Compile Include="Applications\account_management\context_processors.py" />
+    <Compile Include="Applications\account_management\forms.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Applications\Accountmanagement\migrations\__init__.py" />
-    <Compile Include="Applications\AccountManagement\models.py" />
-    <Compile Include="Applications\AccountManagement\tests.py" />
-    <Compile Include="Applications\AccountManagement\urls.py" />
-    <Compile Include="Applications\AccountManagement\views.py" />
-    <Compile Include="Applications\AccountManagement\__init__.py" />
+    <Compile Include="applications\account_management\migrations\__init__.py" />
+    <Compile Include="Applications\account_management\models.py" />
+    <Compile Include="Applications\account_management\tests.py" />
+    <Compile Include="Applications\account_management\urls.py" />
+    <Compile Include="Applications\account_management\views.py" />
+    <Compile Include="Applications\account_management\__init__.py" />
+    <Compile Include="applications\order_management\admin.py" />
+    <Compile Include="applications\order_management\apps.py" />
+    <Compile Include="applications\order_management\migrations\__init__.py" />
+    <Compile Include="applications\order_management\models.py" />
+    <Compile Include="applications\order_management\tests.py" />
+    <Compile Include="applications\order_management\urls.py" />
+    <Compile Include="applications\order_management\views.py" />
+    <Compile Include="applications\order_management\__init__.py" />
     <Compile Include="config\asgi.py" />
     <Compile Include="config\settings.py" />
     <Compile Include="config\urls.py" />
@@ -54,14 +62,14 @@
     <Compile Include="manage.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Applications\AccountManagement\templates\accounts.html" />
-    <Content Include="Applications\AccountManagement\templates\users\create_admin.html" />
-    <Content Include="Applications\AccountManagement\Templates\users\create_producer.html" />
-    <Content Include="Applications\AccountManagement\templates\users\create_user.html">
+    <Content Include="applications\account_management\templates\accounts.html" />
+    <Content Include="applications\account_management\templates\users\create_admin.html" />
+    <Content Include="applications\account_management\templates\users\create_producer.html" />
+    <Content Include="applications\account_management\templates\users\create_customer.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="Applications\AccountManagement\templates\users\login.html" />
-    <Content Include="Applications\AccountManagement\templates\users\list_user.html">
+    <Content Include="applications\account_management\templates\users\login.html" />
+    <Content Include="applications\account_management\templates\users\list_user.html">
       <SubType>Code</SubType>
     </Content>
     <Content Include="docker-compose.yml" />
@@ -78,11 +86,14 @@
     <Content Include="requirements.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Applications\AccountManagement\" />
-    <Folder Include="Applications\AccountManagement\migrations\" />
-    <Folder Include="Applications\" />
-    <Folder Include="Applications\AccountManagement\templates\" />
-    <Folder Include="Applications\AccountManagement\templates\users\" />
+    <Folder Include="Applications\account_management\" />
+    <Folder Include="applications\account_management\migrations\" />
+    <Folder Include="applications\" />
+    <Folder Include="applications\account_management\templates\" />
+    <Folder Include="applications\account_management\templates\users\" />
+    <Folder Include="applications\order_management\" />
+    <Folder Include="applications\order_management\migrations\" />
+    <Folder Include="applications\order_management\templates\" />
     <Folder Include="config\" />
     <Folder Include="static\" />
     <Folder Include="templates\" />

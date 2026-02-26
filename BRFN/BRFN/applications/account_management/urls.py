@@ -6,14 +6,13 @@ app_name = "accounts"
 
 urlpatterns = [
     path("", views.accounts_home, name="accounts_home"),
+
     # Test Model Joins
     path("users/", views.user_list, name="user_list"),
 
     # Registration (TC-001, TC-002)
-    path("register/customer/", views.customer_register, name="customer_register"),     #TODO:LEWIS 
-
-    path("register/producer/", views.producer_register, name="producer_register"),    #TODO:LEWIS 
-
+    path("register/customer/", views.customer_register, name="customer_register"),
+    path("register/producer/", views.producer_register, name="producer_register"),
     path("register/admin/", views.admin_register, name="admin_register"),
 
 
