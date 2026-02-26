@@ -1,9 +1,9 @@
 from django import forms
 import re
 
+#--- forms config ---
 
 PASSWORD_REGEX = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$")
-
 
 def validate_password_rules(pw: str) -> None:
     """
@@ -15,19 +15,54 @@ def validate_password_rules(pw: str) -> None:
             "Password must be at least 8 characters and include an uppercase letter, "
             "a lowercase letter, and a number."
         )
- #TODO:LEWIS 
+
 class BootstrapFormMixin:
+    """
+    Apply Bootstrap 5 classes to all Django form fields automatically.
+    """
+
+    # A mapping of widget classes to the Bootstrap classes they should receive
+    BOOTSTRAP_WIDGET_CLASSES = {
+        forms.TextInput: "form-control",
+        forms.NumberInput: "form-control",
+        forms.EmailInput: "form-control",
+        forms.URLInput: "form-control",
+        forms.PasswordInput: "form-control",
+        forms.Textarea: "form-control",
+        forms.Select: "form-select",
+        forms.SelectMultiple: "form-select",
+        forms.CheckboxInput: "form-check-input",
+        forms.RadioSelect: "form-check-input",
+        forms.FileInput: "form-control",
+        forms.ClearableFileInput: "form-control",
+        forms.DateInput: "form-control",
+        forms.DateTimeInput: "form-control",
+        forms.TimeInput: "form-control",
+    }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         for name, field in self.fields.items():
             widget = field.widget
+            css_class = self._bootstrap_class_for_widget(widget)
 
-            # checkbox
-            if isinstance(widget, forms.CheckboxInput):
-                widget.attrs["class"] = (widget.attrs.get("class", "") + " form-check-input").strip()
-            else:
-                widget.attrs["class"] = (widget.attrs.get("class", "") + " form-control").strip()
+            # Merge with existing classes
+            existing = widget.attrs.get("class", "")
+            widget.attrs["class"] = f"{existing} {css_class}".strip()
+
+    def _bootstrap_class_for_widget(self, widget):
+        """
+        Find the correct Bootstrap class for a widget based on inheritance.
+        """
+        for widget_type, css_class in self.BOOTSTRAP_WIDGET_CLASSES.items():
+            if isinstance(widget, widget_type):
+                return css_class
+        return "form-control"  # fallback for unknown widgets
+
+
+#------
+
 
 class ProducerRegistrationForm(BootstrapFormMixin,forms.Form):
     business_name = forms.CharField(max_length=100)
@@ -89,10 +124,9 @@ class AdminRegistrationForm(BootstrapFormMixin,forms.Form):
         if cd.get("password") and cd.get("confirm_password") and cd["password"] != cd["confirm_password"]:
             raise forms.ValidationError("Passwords do not match.")
         return cd
+
  
-#TODO:LEWIS 
-# Can use this BUT I used a page , but maybe just calling a form is better , up to you BootstrapFormMixin
-class LoginForm(forms.Form):
+class LoginForm(BootstrapFormMixin,forms.Form):
     email = forms.EmailField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput())
     remember_me = forms.BooleanField(required=False)

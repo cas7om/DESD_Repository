@@ -30,8 +30,10 @@
         <p>Confirm password<br>{{ form.confirm_password }} {{ form.confirm_password.errors }}</p>
     </fieldset>
 
+    <p>{{ form.accept_terms }} I accept the terms and conditions {{ form.accept_terms.errors }}</p>
+
     {{ form.non_field_errors }}
 
-    <button type="submit">Create Producer Account</button>
+    <button class="btn btn-primary" type="submit">Create Producer Account</button>
 </form>
 {% endblock %}
