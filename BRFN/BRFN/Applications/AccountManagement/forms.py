@@ -74,8 +74,24 @@ class CustomerRegistrationForm(BootstrapFormMixin,forms.Form):
         if cd.get("password") and cd.get("confirm_password") and cd["password"] != cd["confirm_password"]:
             raise forms.ValidationError("Passwords do not match.")
         return cd
-    #TODO:LEWIS 
-   # Can use this BUT I used a page , but maybe just calling a form is better , up to you BootstrapFormMixin
+
+
+class AdminRegistrationForm(BootstrapFormMixin,forms.Form):
+    full_name = forms.CharField(max_length=100)
+    email = forms.EmailField(max_length=150)
+    phone_no = forms.CharField(max_length=20)
+
+    password = forms.CharField(widget=forms.PasswordInput(), validators=[validate_password_rules])
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
+
+    def clean(self):
+        cd = super().clean()
+        if cd.get("password") and cd.get("confirm_password") and cd["password"] != cd["confirm_password"]:
+            raise forms.ValidationError("Passwords do not match.")
+        return cd
+ 
+#TODO:LEWIS 
+# Can use this BUT I used a page , but maybe just calling a form is better , up to you BootstrapFormMixin
 class LoginForm(forms.Form):
     email = forms.EmailField(max_length=150)
     password = forms.CharField(widget=forms.PasswordInput())

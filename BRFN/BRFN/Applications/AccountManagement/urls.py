@@ -14,6 +14,8 @@ urlpatterns = [
 
     path("register/producer/", views.producer_register, name="producer_register"),    #TODO:LEWIS 
 
+    path("register/admin/", views.admin_register, name="admin_register"),
+
 
     # Auth (TC-022)
     path("login/", views.login_view, name="login"),

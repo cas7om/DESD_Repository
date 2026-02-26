@@ -1,3 +1,8 @@
+Example Admin Account:
+user =		brfnadmin@test.com
+password =	Hello1234!/
+
+
 To run the project for the first time, run:
 
 docker compose up --build

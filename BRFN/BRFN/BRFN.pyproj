@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Applications\AccountManagement\templates\accounts.html" />
+    <Content Include="Applications\AccountManagement\templates\users\create_admin.html" />
+    <Content Include="Applications\AccountManagement\Templates\users\create_producer.html" />
     <Content Include="Applications\AccountManagement\templates\users\create_user.html">
       <SubType>Code</SubType>
     </Content>

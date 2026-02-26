@@ -15,6 +15,7 @@ from .models import (
 from .forms import (
     CustomerRegistrationForm,
     ProducerRegistrationForm,
+    AdminRegistrationForm,
     LoginForm,
 )
 
@@ -44,7 +45,7 @@ def admin_required(view_func):
             messages.error(request, "Please log in first.")
             return redirect("accounts:login")
 
-        if not user.has_role("admin"):
+        if not user.has_role("Admin"):
             messages.error(request, "You do not have permission to access this page.")
             return redirect("accounts:accounts_home")
 
@@ -182,6 +183,36 @@ def producer_register(request):
         form = ProducerRegistrationForm()
 
     return render(request, "users/create_producer.html", {"form": form, "action": "Register"})
+
+@transaction.atomic
+def admin_register(request):
+    _ensure_lookups()
+
+    if request.method == "POST":
+        form = AdminRegistrationForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+
+            if User.objects.filter(email=cd["email"]).exists():
+                form.add_error("email", "This email is already registered.")
+                return render(request, "users/create_admin.html", {"form": form, "action": "Register"})
+
+            user = User.objects.create(
+                full_name=cd["full_name"],
+                email=cd["email"],
+                phone_no=cd["phone_no"],
+                password_hash=make_password(cd["password"]),
+            )
+
+            admin_role = Role.objects.get(name="Admin")
+            UserRole.objects.create(user=user, role=admin_role)
+
+            messages.success(request, "Admin account created successfully. You can now log in.")
+            return redirect("accounts:login")
+    else:
+        form = AdminRegistrationForm()
+
+    return render(request, "users/create_admin.html", {"form": form, "action": "Register"})
 
 
 # TC-022 Login / Logout (session auth)
