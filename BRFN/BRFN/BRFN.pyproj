@@ -3,7 +3,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>BRFN</Name>
     <RootNamespace>BRFN</RootNamespace>
-    <InterpreterId>Global|VisualStudio|env (Python 3.14.3)</InterpreterId>
+    <InterpreterId>Global|PythonCore|3.9</InterpreterId>
     <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup>
@@ -60,6 +60,7 @@
     <Compile Include="applications\order_management\urls.py" />
     <Compile Include="applications\order_management\views.py" />
     <Compile Include="applications\order_management\__init__.py" />
+    <Compile Include="applications\__init__.py" />
     <Compile Include="config\asgi.py" />
     <Compile Include="config\constants.py" />
     <Compile Include="config\decorators.py" />
@@ -119,6 +120,7 @@
     <Folder Include="templates\SharedComponents\" />
   </ItemGroup>
   <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.13" />
     <InterpreterReference Include="Global|PythonCore|3.9" />
     <InterpreterReference Include="Global|VisualStudio|env (Python 3.14.3)" />
   </ItemGroup>
