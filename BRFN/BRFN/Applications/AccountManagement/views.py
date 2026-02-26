@@ -33,6 +33,26 @@ def login_required(view_func):
         return view_func(request, *args, **kwargs)
     return _wrapped
 
+
+def admin_required(view_func):
+    @wraps(view_func)
+    def _wrapped(request, *args, **kwargs):
+        user_id = request.session.get(SESSION_USER_ID_KEY)
+        user = User.objects.filter(id=user_id).first()
+
+        if not user:
+            messages.error(request, "Please log in first.")
+            return redirect("accounts:login")
+
+        if not user.has_role("admin"):
+            messages.error(request, "You do not have permission to access this page.")
+            return redirect("accounts:accounts_home")
+
+        return view_func(request, *args, **kwargs)
+
+    return _wrapped
+
+
 def _login_user(request, user_id: int, remember_me: bool):
     request.session[SESSION_USER_ID_KEY] = user_id
     # remember_me => 14 days, else session cookie
@@ -61,7 +81,7 @@ def accounts_home(request):
 
 
 #NOt working properly and thats TC-022
-@login_required
+@admin_required 
 def user_list(request):
     users = (
         User.objects

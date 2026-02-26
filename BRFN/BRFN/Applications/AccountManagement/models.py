@@ -6,6 +6,12 @@ class User(models.Model):
     phone_no = models.CharField(max_length=20, blank=True)
     password_hash = models.CharField(max_length=300, default="")
 
+    def roles(self):
+        return self.user_roles.values_list("role__name", flat=True)
+
+    def has_role(self, role_name: str) -> bool:
+        return self.user_roles.filter(role__name=role_name).exists()
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=["email"], name="uq_email")

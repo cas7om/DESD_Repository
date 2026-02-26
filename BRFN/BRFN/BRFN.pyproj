@@ -64,6 +64,12 @@
     </Content>
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />
+    <Content Include="static\brfn.css">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="static\brfn.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="templates\SharedComponents\base.html" />
     <Content Include="templates\SharedComponents\header.html" />
     <Content Include="templates\SharedComponents\navbar.html" />
@@ -76,6 +82,7 @@
     <Folder Include="Applications\AccountManagement\templates\" />
     <Folder Include="Applications\AccountManagement\templates\users\" />
     <Folder Include="config\" />
+    <Folder Include="static\" />
     <Folder Include="templates\" />
     <Folder Include="templates\SharedComponents\" />
   </ItemGroup>
