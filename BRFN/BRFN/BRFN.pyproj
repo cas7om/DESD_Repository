@@ -43,6 +43,14 @@
     <Compile Include="Applications\account_management\urls.py" />
     <Compile Include="Applications\account_management\views.py" />
     <Compile Include="Applications\account_management\__init__.py" />
+    <Compile Include="applications\inventory_management\admin.py" />
+    <Compile Include="applications\inventory_management\apps.py" />
+    <Compile Include="applications\inventory_management\migrations\__init__.py" />
+    <Compile Include="applications\inventory_management\models.py" />
+    <Compile Include="applications\inventory_management\tests.py" />
+    <Compile Include="applications\inventory_management\urls.py" />
+    <Compile Include="applications\inventory_management\views.py" />
+    <Compile Include="applications\inventory_management\__init__.py" />
     <Compile Include="applications\order_management\admin.py" />
     <Compile Include="applications\order_management\apps.py" />
     <Compile Include="applications\order_management\migrations\__init__.py" />
@@ -91,6 +99,9 @@
     <Folder Include="applications\" />
     <Folder Include="applications\account_management\templates\" />
     <Folder Include="applications\account_management\templates\users\" />
+    <Folder Include="applications\inventory_management\" />
+    <Folder Include="applications\inventory_management\migrations\" />
+    <Folder Include="applications\inventory_management\templates\" />
     <Folder Include="applications\order_management\" />
     <Folder Include="applications\order_management\migrations\" />
     <Folder Include="applications\order_management\templates\" />

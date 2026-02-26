@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "applications.account_management",
     "applications.order_management",
+    "applications.inventory_management",
 ]
 
 MIDDLEWARE = [
