@@ -6,6 +6,11 @@ class User(models.Model):
     phone_no = models.CharField(max_length=20, blank=True)
     password_hash = models.CharField(max_length=300, default="")
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["email"], name="uq_email")
+        ]
+
     def __str__(self) -> str:
         return f"{self.full_name} ({self.email})"
 
@@ -60,12 +65,23 @@ class Business(models.Model):
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name"], name="uq_prodcat_name")
+        ]
+
     def __str__(self) -> str:
         return self.name
 
 
 class Unit(models.Model):
     name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name"], name="uq_unit_name")
+        ]
+
 
     def __str__(self) -> str:
         return self.name
@@ -74,6 +90,11 @@ class Unit(models.Model):
 class ProduceAvailability(models.Model):
     name = models.CharField(max_length=50, unique=True)
     is_available = models.BooleanField(default=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name"], name="uq_prodavail_name")
+        ]
 
     def __str__(self) -> str:
         return self.name
@@ -108,6 +129,11 @@ class StockItem(models.Model):
 class Allergen(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name"], name="uq_allergen_name")
+        ]
+
     def __str__(self) -> str:
         return self.name
 
@@ -124,6 +150,11 @@ class ProductAllergen(models.Model):
 
 class OrderStatus(models.Model):
     name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name"], name="uq_orderstatus_name")
+        ]
 
     def __str__(self) -> str:
         return self.name
