@@ -22,8 +22,8 @@ from .forms import (
 
 def _login_user(request, user_id: int, remember_me: bool):
     request.session[SESSION_USER_ID_KEY] = user_id
-    # remember_me => 14 days, else session cookie
-    request.session.set_expiry(60 * 60 * 24 * 14 if remember_me else 0)
+    # remember_me => 1 days, else session cookie
+    request.session.set_expiry(60 * 60 * 24 * 1 if remember_me else 0)
 
 def _logout_user(request):
     request.session.pop(SESSION_USER_ID_KEY, None)
