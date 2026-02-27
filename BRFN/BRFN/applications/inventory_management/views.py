@@ -1,35 +1,42 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
 from config.decorators import admin_required
 
 from .models import Allergen
 
-from .forms import CreateAllergenForm
+from .forms import SaveAllergenForm
 
 
 def inventory_home(request):
     return render(request, "inventory.html")
 
+@admin_required 
+def allergen_list(request):
+    allergens = (
+        Allergen.objects.all()
+    )
+    return render(request, "allergens/list_allergen.html", {"allergens": allergens})
+
 @admin_required
 @transaction.atomic
-def allergen_create(request):
+def allergen_save(request, pk=None):
+    allergen = None
+    if pk:
+        allergen = get_object_or_404(Allergen, pk=pk)
+
     if request.method == "POST":
-        form = CreateAllergenForm(request.POST)
+        form = SaveAllergenForm(request.POST, instance=allergen)
         if form.is_valid():
-            cd = form.cleaned_data
-
-            if Allergen.objects.filter(name=cd["name"]).exists():
-                form.add_error("name", "This allergen already exists.")
-                return render(request, "allergens/create_allergen.html", {"form": form, "action": "Create"})
-
-            allergen = Allergen.objects.create(
-                name=cd["name"],
-            )
-
-            messages.success(request, "Allergen created successfully.")
+            form.save()
+            messages.success(request, "Allergen saved successfully.")
             return redirect("inventory:inventory_home")
     else:
-        form = CreateAllergenForm()
+        form = SaveAllergenForm(instance=allergen)
 
-    return render(request, "allergens/create_allergen.html", {"form": form, "action": "Create"})
+    action = "Update" if allergen else "Create"
+    return render(request, "allergens/save_allergen.html", {
+        "form": form,
+        "action": action,
+        "allergen": allergen,
+    })

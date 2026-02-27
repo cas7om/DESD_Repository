@@ -1,0 +1,64 @@
+{% extends "SharedComponents/base.html" %}
+
+{% block title %}Accounts{% endblock %}
+
+{% block content %}
+
+{% include "SharedComponents/base_title.html" with title="Allergens" %}
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h6 class="text-muted">Total Allergens</h6>
+                <h2>{{ allergens|length }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0"><i class="bi bi-table"></i> Allergen List</h5>
+    </div>
+    <div class="card-body">
+        {% if allergens %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Edit</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for allergen in allergens %}
+                    <tr>
+                        <td><code>{{ allergen.id }}</code></td>
+
+                        <td><strong>{{ allergen.name }}</strong></td>
+
+                        <td>
+                            <a href="{% url 'inventory:save_allergen' allergen.id %}"
+                               class="btn btn-sm btn-primary">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+</tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="text-muted mt-3">No allergens found.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+  {% include "SharedComponents/header.html" with text="Welcome!" %}
+{% endblock %}
