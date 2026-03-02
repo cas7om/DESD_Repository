@@ -42,3 +42,38 @@ class OrderLine(models.Model):
 
     def __str__(self) -> str:
         return f"OrderLine(order={self.order_id}, product={self.product_id}, qty={self.quantity})"
+
+class Cart(models.Model):
+    customer = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="cart"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"Cart(customer={self.customer_id})"
+
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(
+        Cart,
+        on_delete=models.CASCADE,
+        related_name="items"
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.PROTECT
+    )
+    quantity = models.DecimalField(max_digits=12, decimal_places=3)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["cart", "product"],
+                name="uq_cart_product"
+            )
+        ]
+
+    def __str__(self) -> str:
+        return f"CartItem(cart={self.cart_id}, product={self.product_id}, qty={self.quantity})"
