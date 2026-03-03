@@ -85,7 +85,8 @@
     <Content Include="applications\account_management\templates\users\list_user.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="applications\inventory_management\templates\allergens\create_allergen.html" />
+    <Content Include="applications\inventory_management\templates\allergens\list_allergen.html" />
+    <Content Include="applications\inventory_management\templates\allergens\save_allergen.html" />
     <Content Include="applications\inventory_management\templates\inventory.html" />
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />

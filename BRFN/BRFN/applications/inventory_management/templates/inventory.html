@@ -15,8 +15,13 @@
     </div>
     {% if is_admin %}
     <div class="card-body">
-        <a href="{% url 'inventory:create_allergen' %}" class="btn btn-primary">
-            <i class="bi bi-people"></i> Add Allergen
+        <a href="{% url 'inventory:save_allergen' 0 %}" class="btn btn-primary">
+            <i class="bi bi-people"></i> Add New Allergen
+        </a>
+    </div>
+    <div class="card-body">
+        <a href="{% url 'inventory:list_allergen' %}" class="btn btn-primary">
+            <i class="bi bi-people"></i> Allergen List
         </a>
     </div>
     {% else %}
