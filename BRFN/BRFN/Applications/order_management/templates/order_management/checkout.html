@@ -1,0 +1,60 @@
+{% extends "SharedComponents/base.html" %}
+{% block content %}
+
+<h2>Checkout</h2>
+
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<p><strong>Producer:</strong> {{ producer.name }}</p>
+
+<h3>Order Summary</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Unit</th>
+            <th>Qty</th>
+            <th>Line Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for it in items %}
+        <tr>
+            <td>{{ it.product.name }}</td>
+            <td>£{{ it.unit_price }}</td>
+            <td>{{ it.quantity }}</td>
+            <td>£{{ it.line_total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><strong>Subtotal:</strong> £{{ subtotal }}</p>
+<p><strong>Commission (5%):</strong> £{{ commission }}</p>
+<p><strong>Total:</strong> £{{ total }}</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label>Delivery address</label><br>
+    <textarea name="delivery_address" rows="3" cols="60" required></textarea><br><br>
+
+    <label>Delivery date/time (must be ≥ 48 hours from now)</label><br>
+    <input type="datetime-local" name="delivery_date" required><br><br>
+
+    <label>Delivery instructions</label><br>
+    <input type="text" name="delivery_instructions" maxlength="300"><br><br>
+
+    <h3>Payment (Test Mode)</h3>
+    <p>Sandbox payment for coursework.</p>
+
+    <button type="submit">Confirm order</button>
+</form>
+
+{% endblock %}

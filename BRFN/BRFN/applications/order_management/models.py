@@ -42,3 +42,4 @@ class OrderLine(models.Model):
 
     def __str__(self) -> str:
         return f"OrderLine(order={self.order_id}, product={self.product_id}, qty={self.quantity})"
+
