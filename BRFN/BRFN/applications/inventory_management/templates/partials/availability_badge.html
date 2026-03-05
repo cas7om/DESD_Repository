@@ -1,0 +1,5 @@
+{% if availability and availability.is_available %}
+<span class="ui-badge ui-badge--success">{{ availability.name }}</span>
+{% else %}
+<span class="ui-badge ui-badge--unavailable">{% if availability %}{{ availability.name }}{% else %}Unavailable{% endif %}</span>
+{% endif %}

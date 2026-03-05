@@ -3,7 +3,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <Name>BRFN</Name>
     <RootNamespace>BRFN</RootNamespace>
-    <InterpreterId>Global|PythonCore|3.9</InterpreterId>
+    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
     <TestFramework>Pytest</TestFramework>
   </PropertyGroup>
   <PropertyGroup>
@@ -31,18 +31,18 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Applications\account_management\admin.py" />
-    <Compile Include="Applications\account_management\apps.py" />
-    <Compile Include="Applications\account_management\context_processors.py" />
-    <Compile Include="Applications\account_management\forms.py">
+    <Compile Include="applications\account_management\admin.py" />
+    <Compile Include="applications\account_management\apps.py" />
+    <Compile Include="applications\account_management\context_processors.py" />
+    <Compile Include="applications\account_management\forms.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="applications\account_management\migrations\__init__.py" />
-    <Compile Include="Applications\account_management\models.py" />
-    <Compile Include="Applications\account_management\tests.py" />
-    <Compile Include="Applications\account_management\urls.py" />
-    <Compile Include="Applications\account_management\views.py" />
-    <Compile Include="Applications\account_management\__init__.py" />
+    <Compile Include="applications\account_management\models.py" />
+    <Compile Include="applications\account_management\tests.py" />
+    <Compile Include="applications\account_management\urls.py" />
+    <Compile Include="applications\account_management\views.py" />
+    <Compile Include="applications\account_management\__init__.py" />
     <Compile Include="applications\inventory_management\admin.py" />
     <Compile Include="applications\inventory_management\apps.py" />
     <Compile Include="applications\inventory_management\forms.py" />
@@ -50,7 +50,9 @@
     <Compile Include="applications\inventory_management\models.py" />
     <Compile Include="applications\inventory_management\tests.py" />
     <Compile Include="applications\inventory_management\urls.py" />
+    <Compile Include="applications\inventory_management\urls_marketplace.py" />
     <Compile Include="applications\inventory_management\views.py" />
+    <Compile Include="applications\inventory_management\views_producer.py" />
     <Compile Include="applications\inventory_management\__init__.py" />
     <Compile Include="applications\order_management\admin.py" />
     <Compile Include="applications\order_management\apps.py" />
@@ -85,14 +87,24 @@
     <Content Include="applications\account_management\templates\users\list_user.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="applications\inventory_management\templates\allergens\list_allergen.html" />
-    <Content Include="applications\inventory_management\templates\allergens\save_allergen.html" />
+
+    <Content Include="applications\inventory_management\templates\allergens\create_allergen.html" />
+    <Content Include="applications\inventory_management\templates\partials\availability_badge.html" />
+    <Content Include="applications\inventory_management\templates\partials\market_navbar.html" />
     <Content Include="applications\inventory_management\templates\inventory.html" />
+    <Content Include="applications\inventory_management\templates\Dashboards\category.html" />
+    <Content Include="applications\inventory_management\templates\Dashboards\home.html" />
+    <Content Include="applications\inventory_management\templates\partials\product_card.html" />
+    <Content Include="applications\inventory_management\templates\Dashboards\product_detail.html" />
+    <Content Include="applications\inventory_management\templates\Dashboards\search.html" />
+    <Content Include="applications\inventory_management\templates\partials\sidebar_producer.html" />
+    <Content Include="applications\inventory_management\templates\Producer\alerts.html" />
+    <Content Include="applications\inventory_management\templates\Producer\orders.html" />
+    <Content Include="applications\inventory_management\templates\Producer\products.html" />
+    <Content Include="applications\inventory_management\templates\Producer\product_form.html" />
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />
-    <Content Include="static\brfn.css">
-      <SubType>Code</SubType>
-    </Content>
+    <Content Include="static\brfn.css" />
     <Content Include="static\brfn.js">
       <SubType>Code</SubType>
     </Content>
@@ -103,7 +115,7 @@
     <Content Include="templates\SharedComponents\base_title.html" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Applications\account_management\" />
+    <Folder Include="applications\account_management\" />
     <Folder Include="applications\account_management\migrations\" />
     <Folder Include="applications\" />
     <Folder Include="applications\account_management\templates\" />
@@ -112,6 +124,9 @@
     <Folder Include="applications\inventory_management\migrations\" />
     <Folder Include="applications\inventory_management\templates\" />
     <Folder Include="applications\inventory_management\templates\allergens\" />
+    <Folder Include="applications\inventory_management\templates\Dashboards\" />
+    <Folder Include="applications\inventory_management\templates\partials\" />
+    <Folder Include="applications\inventory_management\templates\Producer\" />
     <Folder Include="applications\order_management\" />
     <Folder Include="applications\order_management\migrations\" />
     <Folder Include="applications\order_management\templates\" />
@@ -124,6 +139,17 @@
     <InterpreterReference Include="Global|PythonCore|3.13" />
     <InterpreterReference Include="Global|PythonCore|3.9" />
     <InterpreterReference Include="Global|VisualStudio|env (Python 3.14.3)" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env\">
+      <Id>env</Id>
+      <Version>3.12</Version>
+      <Description>env (Python 3.12 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
   <!-- Specify pre- and post-build commands in the BeforeBuild and 
