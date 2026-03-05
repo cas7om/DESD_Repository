@@ -9,7 +9,7 @@ from .models import (
     ProductCategory,
 )
 
-from .forms import CreateAllergenForm
+from .forms import SaveAllergenForm
 
 
 def inventory_home(request):
@@ -18,9 +18,13 @@ def inventory_home(request):
 
 @admin_required
 @transaction.atomic
-def allergen_create(request):
+def allergen_save(request, pk=None):
+    allergen = None
+    if pk:
+        allergen = get_object_or_404(Allergen, pk=pk)
+
     if request.method == "POST":
-        form = CreateAllergenForm(request.POST)
+        form = SaveAllergenForm(request.POST, instance=allergen)
         if form.is_valid():
             cd = form.cleaned_data
 

@@ -87,6 +87,7 @@
     <Content Include="applications\account_management\templates\users\list_user.html">
       <SubType>Code</SubType>
     </Content>
+
     <Content Include="applications\inventory_management\templates\allergens\create_allergen.html" />
     <Content Include="applications\inventory_management\templates\partials\availability_badge.html" />
     <Content Include="applications\inventory_management\templates\partials\market_navbar.html" />
