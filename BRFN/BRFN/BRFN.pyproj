@@ -87,8 +87,8 @@
     <Content Include="applications\account_management\templates\users\list_user.html">
       <SubType>Code</SubType>
     </Content>
-
-    <Content Include="applications\inventory_management\templates\allergens\create_allergen.html" />
+    <Content Include="applications\inventory_management\templates\allergens\list_allergen.html" />
+    <Content Include="applications\inventory_management\templates\allergens\save_allergen.html" />
     <Content Include="applications\inventory_management\templates\partials\availability_badge.html" />
     <Content Include="applications\inventory_management\templates\partials\market_navbar.html" />
     <Content Include="applications\inventory_management\templates\inventory.html" />
@@ -102,6 +102,9 @@
     <Content Include="applications\inventory_management\templates\Producer\orders.html" />
     <Content Include="applications\inventory_management\templates\Producer\products.html" />
     <Content Include="applications\inventory_management\templates\Producer\product_form.html" />
+    <Content Include="applications\order_management\templates\order_management\cart.html" />
+    <Content Include="applications\order_management\templates\order_management\checkout.html" />
+    <Content Include="applications\order_management\templates\order_management\confirmation.html" />
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />
     <Content Include="static\brfn.css" />
@@ -130,6 +133,7 @@
     <Folder Include="applications\order_management\" />
     <Folder Include="applications\order_management\migrations\" />
     <Folder Include="applications\order_management\templates\" />
+    <Folder Include="applications\order_management\templates\order_management\" />
     <Folder Include="config\" />
     <Folder Include="static\" />
     <Folder Include="templates\" />
