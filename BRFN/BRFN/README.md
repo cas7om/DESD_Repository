@@ -1,4 +1,4 @@
-SM
+SM EFE
 **To run the project for the first time, run:**
 
 > docker compose up --build
