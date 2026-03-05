@@ -74,9 +74,20 @@
                         <div class="ui-muted small">
                             Purchase / checkout flow is implemented by the Auth/Payment teammate.
                         </div>
-                        <button class="ui-btn ui-btn--primary ui-btn--sm is-disabled" aria-disabled="true">
-                            Add to cart (UI)
-                        </button>
+                        <form method="post" action="/orders/cart/add/{{ product_id }}/">
+                            {% csrf_token %}
+                            <input type="number"
+                                   name="quantity"
+                                   value="1"
+                                   min="1"
+                                   step="0.001">
+
+                            <button class="ui-btn ui-btn--primary ui-btn--sm">
+                                Add to Cart
+                            </button>
+                        </form>
+
+
                     </div>
                 </div>
 

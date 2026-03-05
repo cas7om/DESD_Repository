@@ -117,5 +117,5 @@ def market_product_detail(request, pid):
     return render(
         request,
         "Dashboards/product_detail.html",
-        {"p": p, "allergens": allergens, "categories": categories, "q": ""},
+        {"p": p,"product_id": p.pk,  "allergens": allergens, "categories": categories, "q": ""},
     )
