@@ -1,0 +1,21 @@
+{% extends "SharedComponents/base.html" %}
+{% block title %}Producer • Orders{% endblock %}
+
+{% block content %}
+<div class="row g-3">
+    <aside class="col-12 col-lg-3">
+        {% include "partials/sidebar_producer.html" %}
+    </aside>
+
+    <section class="col-12 col-lg-9">
+        <div class="card ui-card">
+            <div class="card-body">
+                <h1 class="h5 mb-2">Orders</h1>
+                <div class="ui-muted">
+                    Orders live in <code>order_management</code>. This page is a placeholder until that integration is wired.
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

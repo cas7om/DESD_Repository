@@ -1,0 +1,50 @@
+<!-- {# ==========================================================
+  MARKET NAVBAR (TEAM NOTE)
+  - Used on customer-facing pages (home/category/search/product_detail)
+  - Provides category navigation (TC-004) and search (TC-005)
+  - DB-backed categories + stable Django URL routing
+========================================================== #} -->
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+    <div class="container-fluid px-4" style="max-width: 1200px;">
+        <a class="navbar-brand fw-bold" href="{% url 'marketplace:home' %}">BRFN</a>
+
+        <!-- Mobile toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#marketNav"
+                aria-controls="marketNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="marketNav">
+            <!-- Category menu (TC-004) -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                {% if categories %}
+                {% for c in categories %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'marketplace:category' c.name|lower|slugify %}">{{ c.name }}</a>
+                </li>
+                {% endfor %}
+                {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'marketplace:home' %}">Home</a></li>
+                {% endif %}
+            </ul>
+
+            <!-- Search (TC-005) -->
+            <form class="d-flex gap-2 me-lg-3 mb-2 mb-lg-0" action="{% url 'marketplace:search' %}" method="get">
+                <input class="form-control"
+                       name="q"
+                       placeholder="Search products..."
+                       value="{{ q|default:'' }}" />
+                <button class="ui-btn ui-btn--primary ui-btn--sm" type="submit">
+                    Search
+                </button>
+            </form>
+
+            <!-- Quick role shortcuts -->
+            <div class="d-flex gap-2">
+                <a class="ui-btn ui-btn--outline ui-btn--sm" href="{% url 'inventory:producer_products' %}">Producer</a>
+                <a class="ui-btn ui-btn--outline ui-btn--sm" href="/orders/network-admin/commission/">Admin</a>
+            </div>
+        </div>
+    </div>
+</nav>

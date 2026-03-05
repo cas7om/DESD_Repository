@@ -1,0 +1,107 @@
+{% extends "SharedComponents/base.html" %}
+{% block title %}{% if mode == 'edit' %}Edit Product{% else %}Add Product{% endif %}{% endblock %}
+
+{% block content %}
+
+<div class="row g-3">
+    <aside class="col-12 col-lg-3">
+        {% include "partials/sidebar_producer.html" %}
+    </aside>
+
+    <section class="col-12 col-lg-9">
+
+        <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+            <div>
+                <h1 class="h4 mb-1">
+                    {% if mode == 'edit' %}Edit Product{% else %}Add Product{% endif %}
+                </h1>
+                <div class="ui-muted small">
+                    {% if mode == 'edit' %}Update fields and save changes.{% else %}Create a new product entry.{% endif %}
+                </div>
+            </div>
+
+            <a class="ui-btn ui-btn--outline ui-btn--sm" href="{% url 'inventory:producer_products' %}">Back</a>
+        </div>
+
+        <div class="card ui-card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Name</label>
+                            <input class="form-control" name="name" value="{{ product.name|default:'' }}" placeholder="e.g., Carrots">
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Price</label>
+                            <input class="form-control" name="price" value="{{ product.price|default:'' }}" placeholder="e.g., 2.50">
+                            <div class="ui-muted small mt-1">Stored as decimal in DB.</div>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" name="category">
+                                {% for c in categories %}
+                                <option value="{{ c.id }}"
+                                        {% if product and product.category_id == c.id %}selected{% endif %}>
+                                    {{ c.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <label class="form-label">Unit</label>
+                            <select class="form-select" name="unit">
+                                {% for u in units %}
+                                <option value="{{ u.id }}"
+                                        {% if product and product.unit_id == u.id %}selected{% endif %}>
+                                    {{ u.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-4">
+                            <label class="form-label">Availability</label>
+                            <select class="form-select" name="availability">
+                                {% for a in availabilities %}
+                                <option value="{{ a.id }}"
+                                        {% if product and product.availability_id == a.id %}selected{% endif %}>
+                                    {{ a.name }}{% if not a.is_available %} (hidden from marketplace){% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Stock quantity</label>
+                            <input class="form-control" name="stock"
+                                   value="{% if product %}{{ product.stock.quantity|default:'' }}{% endif %}"
+                                   placeholder="e.g., 10">
+                            <div class="ui-muted small mt-1">Comes from StockItem (OneToOne).</div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label">Low stock threshold (UI rule)</label>
+                            <input class="form-control" value="{{ low_stock_threshold|default:'10' }}" disabled>
+                            <div class="ui-muted small mt-1">Threshold is a UI rule for alerts (not stored in DB yet).</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button class="ui-btn ui-btn--primary" type="submit">
+                            Save
+                        </button>
+                        <a class="ui-btn ui-btn--outline" href="{% url 'inventory:producer_products' %}">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+</div>
+
+{% endblock %}
