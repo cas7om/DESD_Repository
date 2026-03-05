@@ -50,7 +50,9 @@
     <Compile Include="applications\inventory_management\models.py" />
     <Compile Include="applications\inventory_management\tests.py" />
     <Compile Include="applications\inventory_management\urls.py" />
+    <Compile Include="applications\inventory_management\urls_marketplace.py" />
     <Compile Include="applications\inventory_management\views.py" />
+    <Compile Include="applications\inventory_management\views_producer.py" />
     <Compile Include="applications\inventory_management\__init__.py" />
     <Compile Include="applications\order_management\admin.py" />
     <Compile Include="applications\order_management\apps.py" />
@@ -85,8 +87,21 @@
     <Content Include="applications\account_management\templates\users\list_user.html">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="applications\inventory_management\templates\allergens\create_allergen.html" />
+    <Content Include="applications\inventory_management\templates\allergens\list_allergen.html" />
+    <Content Include="applications\inventory_management\templates\allergens\save_allergen.html" />
+    <Content Include="applications\inventory_management\templates\Dashboards\category.html" />
+    <Content Include="applications\inventory_management\templates\Dashboards\home.html" />
+    <Content Include="applications\inventory_management\templates\Dashboards\product_detail.html" />
+    <Content Include="applications\inventory_management\templates\Dashboards\search.html" />
     <Content Include="applications\inventory_management\templates\inventory.html" />
+    <Content Include="applications\inventory_management\templates\partials\availability_badge.html" />
+    <Content Include="applications\inventory_management\templates\partials\market_navbar.html" />
+    <Content Include="applications\inventory_management\templates\partials\product_card.html" />
+    <Content Include="applications\inventory_management\templates\partials\sidebar_producer.html" />
+    <Content Include="applications\inventory_management\templates\Producer\alerts.html" />
+    <Content Include="applications\inventory_management\templates\Producer\orders.html" />
+    <Content Include="applications\inventory_management\templates\Producer\products.html" />
+    <Content Include="applications\inventory_management\templates\Producer\product_form.html" />
     <Content Include="applications\order_management\templates\order_management\cart.html" />
     <Content Include="applications\order_management\templates\order_management\checkout.html" />
     <Content Include="applications\order_management\templates\order_management\confirmation.html" />
@@ -114,6 +129,9 @@
     <Folder Include="applications\inventory_management\migrations\" />
     <Folder Include="applications\inventory_management\templates\" />
     <Folder Include="applications\inventory_management\templates\allergens\" />
+    <Folder Include="applications\inventory_management\templates\Dashboards\" />
+    <Folder Include="applications\inventory_management\templates\partials\" />
+    <Folder Include="applications\inventory_management\templates\Producer\" />
     <Folder Include="applications\order_management\" />
     <Folder Include="applications\order_management\migrations\" />
     <Folder Include="applications\order_management\templates\" />
