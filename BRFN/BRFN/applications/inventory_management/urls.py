@@ -9,7 +9,7 @@ urlpatterns = [
     path("", views.inventory_home, name="inventory_home"),
 
     # Allergen
-    path("allergen/create/", views.allergen_create, name="create_allergen"),
+    # path("allergen/create/", views.allergen_create, name="create_allergen"),
 
     # --------------------------
     # Producer Dashboard routes
