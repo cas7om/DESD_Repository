@@ -1,0 +1,43 @@
+{% extends "SharedComponents/base.html" %}
+{% block content %}
+
+<h2>Order Confirmed</h2>
+
+<p><strong>Order Ref:</strong> {{ order.order_ref }}</p>
+<p><strong>Status:</strong> {{ order.status.name }}</p>
+{% if producer %}
+<p><strong>Producer:</strong> {{ producer.name }}</p>
+{% endif %}
+
+<h3>Items</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Unit</th>
+            <th>Qty</th>
+            <th>Line Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for it in items %}
+        <tr>
+            <td>{{ it.product.name }}</td>
+            <td>£{{ it.unit_price }}</td>
+            <td>{{ it.quantity }}</td>
+            <td>£{{ it.line_total }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><strong>Subtotal:</strong> £{{ subtotal }}</p>
+<p><strong>Commission (5%):</strong> £{{ commission }}</p>
+<p><strong>Total:</strong> £{{ total }}</p>
+
+{% if order.delivery_instructions %}
+<h3>Delivery / Payment Record</h3>
+<pre>{{ order.delivery_instructions }}</pre>
+{% endif %}
+
+{% endblock %}

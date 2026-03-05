@@ -1,0 +1,108 @@
+{% extends "SharedComponents/base.html" %}
+{% block content %}
+
+<div style="max-width: 900px; margin: 0 auto; padding: 16px;">
+    <h1 style="margin-bottom: 6px;">Your Cart</h1>
+    <p style="margin-top: 0; color: #666;">Review items, adjust quantities, and proceed to checkout.</p>
+
+    {% if messages %}
+    <div style="margin: 12px 0;">
+        {% for message in messages %}
+        <div style="padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 8px;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if lines|length == 0 %}
+    <div style="border: 1px solid #eee; border-radius: 12px; padding: 18px;">
+        <h3 style="margin-top: 0;">Your cart is empty</h3>
+        <p style="color:#666;">Browse products and add them to your cart to begin checkout.</p>
+
+        <div style="display:flex; gap:12px; align-items:center; margin-top: 12px;">
+            <a href="/inventory/" style="display:inline-block; padding:10px 14px; border: 1px solid #222; border-radius: 10px; text-decoration:none;">
+                Continue shopping
+            </a>
+            <a href="/inventory/" style="display:inline-block; padding:10px 14px; border-radius: 10px; text-decoration:none; background:#222; color:#fff;">
+                View catalogue
+            </a>
+        </div>
+    </div>
+
+    {% else %}
+    <form method="post" action="{% url 'orders:cart_update' %}">
+        {% csrf_token %}
+
+        <div style="border: 1px solid #eee; border-radius: 12px; overflow:hidden;">
+            <table style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background:#fafafa;">
+                        <th style="text-align:left; padding:12px; border-bottom:1px solid #eee;">Product</th>
+                        <th style="text-align:right; padding:12px; border-bottom:1px solid #eee;">Unit Price</th>
+                        <th style="text-align:center; padding:12px; border-bottom:1px solid #eee; width:160px;">Quantity</th>
+                        <th style="text-align:right; padding:12px; border-bottom:1px solid #eee;">Line Total</th>
+                        <th style="text-align:right; padding:12px; border-bottom:1px solid #eee;">Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for ln in lines %}
+                    <tr>
+                        <td style="padding:12px; border-bottom:1px solid #f2f2f2;">
+                            <div style="font-weight:600;">{{ ln.product.name }}</div>
+                            {% if ln.product.business %}
+                            <div style="font-size: 12px; color:#777;">Producer: {{ ln.product.business.name }}</div>
+                            {% endif %}
+                        </td>
+
+                        <td style="padding:12px; text-align:right; border-bottom:1px solid #f2f2f2;">
+                            £{{ ln.unit_price }}
+                        </td>
+
+                        <td style="padding:12px; text-align:center; border-bottom:1px solid #f2f2f2;">
+                            <input type="number"
+                                   step="0.001"
+                                   min="0"
+                                   name="qty_{{ ln.product.id }}"
+                                   value="{{ ln.quantity }}"
+                                   style="width:110px; padding:8px; border:1px solid #ddd; border-radius:10px;" />
+                        </td>
+
+                        <td style="padding:12px; text-align:right; border-bottom:1px solid #f2f2f2;">
+                            £{{ ln.line_total }}
+                        </td>
+
+                        <td style="padding:12px; text-align:right; border-bottom:1px solid #f2f2f2;">
+                            <a href="{% url 'orders:cart_remove' ln.product.id %}" style="color:#b00020; text-decoration:none;">
+                                Remove
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 12px;">
+            <a href="/inventory/" style="padding:10px 14px; border: 1px solid #222; border-radius: 10px; text-decoration:none;">
+                Continue shopping
+            </a>
+
+            <div style="display:flex; gap:12px; align-items:center;">
+                <div style="font-size: 16px;">
+                    <strong>Subtotal:</strong> £{{ subtotal }}
+                </div>
+                <button type="submit" style="padding:10px 14px; border-radius: 10px; border:1px solid #222; background:#fff;">
+                    Update cart
+                </button>
+                <a href="/orders/checkout/" style="padding:10px 14px; border-radius: 10px; text-decoration:none; background:#222; color:#fff;">
+                    Proceed to checkout
+                </a>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+</div>
+
+{% endblock %}
