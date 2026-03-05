@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import transaction
-from django.db.models import Prefetch
 from django.contrib.auth.hashers import make_password, check_password
-from functools import wraps
 from config.constants import SESSION_USER_ID_KEY
 from config.decorators import login_required, admin_required
 
@@ -20,41 +18,47 @@ from .forms import (
     LoginForm,
 )
 
+
 def _login_user(request, user_id: int, remember_me: bool):
     request.session[SESSION_USER_ID_KEY] = user_id
-    # remember_me => 1 days, else session cookie
+    # remember_me => 1 day, else session cookie
     request.session.set_expiry(60 * 60 * 24 * 1 if remember_me else 0)
+
 
 def _logout_user(request):
     request.session.pop(SESSION_USER_ID_KEY, None)
+
 
 def _ensure_lookups():
     for r in ["Customer", "Producer", "CommunityGroup", "Restaurant", "Admin"]:
         Role.objects.get_or_create(name=r)
 
-# region Pages
+
+# -----------------------------
 # Pages
 # -----------------------------
 def accounts_home(request):
     return render(request, "accounts.html")
 
 
-@admin_required 
+@admin_required
 def user_list(request):
     users = (
         User.objects
         .all()
         .order_by("id")
         .prefetch_related(
-            "user_roles__role",     # roles via UserRole
-            "addresses__address",   # addresses via UserAddress
-            "managed_businesses__address",  # businesses user manages + business address
+            "user_roles__role",              # roles via UserRole
+            "addresses__address",            # addresses via UserAddress
+            "managed_businesses__address",   # businesses user manages + business address
         )
     )
     return render(request, "users/list_user.html", {"users": users})
 
 
-# TC-002 Customer registration
+# -----------------------------
+# Registration
+# -----------------------------
 @transaction.atomic
 def customer_register(request):
     _ensure_lookups()
@@ -64,7 +68,6 @@ def customer_register(request):
         if form.is_valid():
             cd = form.cleaned_data
 
-            # enforce unique email
             if User.objects.filter(email=cd["email"]).exists():
                 form.add_error("email", "This email is already registered.")
                 return render(request, "users/create_customer.html", {"form": form, "action": "Register"})
@@ -85,7 +88,6 @@ def customer_register(request):
                 line3=cd.get("line3", "") or "",
                 postcode=cd["postcode"],
             )
-
             UserAddress.objects.create(user=user, address=delivery_addr)
 
             messages.success(request, "Customer account created successfully. You can now log in.")
@@ -95,7 +97,7 @@ def customer_register(request):
 
     return render(request, "users/create_customer.html", {"form": form, "action": "Register"})
 
-# TC-001 Producer registration
+
 @transaction.atomic
 def producer_register(request):
     _ensure_lookups()
@@ -125,7 +127,6 @@ def producer_register(request):
                 line3=cd.get("line3", "") or "",
                 postcode=cd["postcode"],
             )
-
             UserAddress.objects.create(user=user, address=business_addr)
 
             Business.objects.create(
@@ -140,6 +141,7 @@ def producer_register(request):
         form = ProducerRegistrationForm()
 
     return render(request, "users/create_producer.html", {"form": form, "action": "Register"})
+
 
 @transaction.atomic
 def admin_register(request):
@@ -172,7 +174,9 @@ def admin_register(request):
     return render(request, "users/create_admin.html", {"form": form, "action": "Register"})
 
 
-# TC-022 Login / Logout (session auth)
+# -----------------------------
+# Login / Logout (session auth)
+# -----------------------------
 def login_view(request):
     _ensure_lookups()
 
@@ -190,11 +194,22 @@ def login_view(request):
 
             _login_user(request, user.id, remember_me=cd.get("remember_me", False))
             messages.success(request, "Logged in successfully.")
+
+            # Role-based redirect
+            is_producer = UserRole.objects.filter(
+                user_id=user.id,
+                role__name__iexact="Producer"
+            ).exists()
+
+            if is_producer:
+                return redirect("inventory:producer_products")
+
             return redirect("accounts:accounts_home")
     else:
         form = LoginForm()
 
     return render(request, "users/login.html", {"form": form})
+
 
 @login_required
 def logout_view(request):

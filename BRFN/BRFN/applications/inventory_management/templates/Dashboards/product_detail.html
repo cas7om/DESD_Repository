@@ -1,0 +1,139 @@
+<!-- {# ==========================================================
+  PRODUCT DETAIL (TEAM NOTE)
+  - Test Case alignment:
+    - TC-015: allergen warnings must be clear and visible
+  - Case study alignment:
+    - show origin + harvest date + seasonal availability indicators (traceability)
+    - NOTE: origin/harvest/best-before are UI-only placeholders (not in DB model)
+  - Checkout / payment buttons are handled by another teammate
+========================================================== #} -->
+{% extends "SharedComponents/base.html" %}
+{% block title %}{{ p.name }}{% endblock %}
+
+{% block content %}
+
+{% include "SharedComponents/navbar.html" %}
+
+<div class="mt-3">
+    <a href="{% url 'marketplace:home' %}" class="ui-btn ui-btn--ghost ui-btn--sm">&larr; Back</a>
+</div>
+
+<div class="row g-3 mt-2">
+
+    <!-- Main info / traceability -->
+    <div class="col-12 col-lg-8">
+        <div class="card ui-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        <h1 class="h4 mb-1">{{ p.name }}</h1>
+
+                        <div class="ui-muted">
+                            {% if p.business.business_name %}
+                            {{ p.business.business_name }}
+                            {% else %}
+                            {{ p.business }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <span class="ui-badge ui-badge--success">{{ p.availability.name }}</span>
+                </div>
+
+                <div class="mt-3 d-flex flex-wrap gap-3 align-items-center">
+                    <div class="fw-semibold">
+                        Price: £{{ p.price }}{% if p.unit %} / {{ p.unit.name }}{% endif %}
+                    </div>
+
+                    {% if p.stock %}
+                    <div class="ui-muted small">Stock: {{ p.stock.quantity }}</div>
+                    {% endif %}
+                </div>
+
+                <hr>
+
+                <!-- Traceability info (UI-only placeholders) -->
+                <div class="row g-2">
+                    <div class="col-12 col-md-4">
+                        <div class="ui-muted small">Farm origin</div>
+                        <div class="fw-semibold">—</div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="ui-muted small">Harvest date</div>
+                        <div class="fw-semibold">—</div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="ui-muted small">Best-before</div>
+                        <div class="fw-semibold">—</div>
+                    </div>
+                </div>
+
+                <!-- UI-only purchase placeholder -->
+                <div class="card ui-card mt-3">
+                    <div class="card-body d-flex flex-wrap gap-2 justify-content-between align-items-center">
+                        <div class="ui-muted small">
+                            Purchase / checkout flow is implemented by the Auth/Payment teammate.
+                        </div>
+                        <button class="ui-btn ui-btn--primary ui-btn--sm is-disabled" aria-disabled="true">
+                            Add to cart (UI)
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Allergen warning -->
+    <div class="col-12 col-lg-4">
+        <div class="card ui-card">
+            <div class="card-body">
+                <div class="fw-semibold mb-2">Allergen information</div>
+
+                {% if allergens and allergens|length > 0 %}
+                <div class="alert alert-warning mb-0">
+                    <strong>Contains:</strong> {{ allergens|join:", " }}
+                </div>
+                {% else %}
+                <div class="alert alert-success mb-0">
+                    <strong>No common allergens</strong>
+                </div>
+                {% endif %}
+
+                <div class="ui-muted small mt-2">
+                    Allergen warnings must be clear and visible before ordering (TC-015).
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick facts -->
+        <div class="card ui-card mt-3">
+            <div class="card-body">
+                <div class="fw-semibold mb-2">Quick facts</div>
+                <div class="small">
+                    <div>
+                        <span class="ui-muted">Producer:</span>
+                        {% if p.business.business_name %}
+                        {{ p.business.business_name }}
+                        {% else %}
+                        {{ p.business }}
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-1"><span class="ui-muted">Origin:</span> —</div>
+
+                    <div class="mt-1">
+                        <span class="ui-muted">Availability:</span>
+                        <span class="ui-badge ui-badge--success">{{ p.availability.name }}</span>
+                    </div>
+
+                    <div class="mt-1">
+                        <span class="ui-muted">Category:</span> {{ p.category.name }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+<!-- {# ==========================================================
+  MARKETPLACE HOME (TEAM NOTE)
+  - Test Case alignment:
+    - TC-004 Browse categories (navbar provides categories)
+    - Product cards show: name, price, producer, availability (+optional stock)
+    - Unavailable products must NOT appear (handled in views.py filter)
+  - Uses reusable product_card component for consistent UI
+========================================================== #} -->
+{% extends "SharedComponents/base.html" %}
+{% block title %}Marketplace{% endblock %}
+
+{% block content %}
+
+{# Marketplace navbar (categories + search) #}
+{% include "SharedComponents/navbar.html" %}
+
+<div class="d-flex flex-wrap gap-2 justify-content-between align-items-end mb-3 mt-3">
+    <div>
+        <h1 class="h4 mb-1">Marketplace</h1>
+        <p class="ui-muted mb-0">Browse local producers and available products.</p>
+    </div>
+
+    {# Quick shortcut buttons (make sure these categories exist in DB) #}
+    <div class="d-flex gap-2">
+        <a class="ui-btn ui-btn--outline ui-btn--sm" href="{% url 'marketplace:category' 'seasonal' %}">Seasonal</a>
+        <a class="ui-btn ui-btn--outline ui-btn--sm" href="{% url 'marketplace:category' 'vegetables' %}">Vegetables</a>
+    </div>
+</div>
+
+{% if products %}
+<div class="row g-3">
+    {% for p in products %}
+    {% include "partials/product_card.html" with p=p %}
+    {% endfor %}
+</div>
+{% else %}
+<div class="card ui-card mt-3">
+    <div class="card-body">
+        <div class="fw-semibold">No products available</div>
+        <div class="ui-muted">Check back later or try another category.</div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

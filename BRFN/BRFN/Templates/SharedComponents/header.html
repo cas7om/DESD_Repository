@@ -1,3 +1,104 @@
-<header style="padding: 12px 16px; border-bottom: 1px solid #ddd;">
-    <strong>BRFN</strong> | <a href="/inventory/">Inventory</a> | <a href="/accounts/">Accounts</a> | <a href="/admin/">Admin</a>
-</header>
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
+    <div class="container-fluid px-4" style="max-width: 1200px;">
+        <a class="navbar-brand fw-bold" href="{% url 'marketplace:home' %}">BRFN</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainHeader"
+                aria-controls="mainHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainHeader">
+
+            {# LEFT: Main navigation #}
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'marketplace:home' %}">Marketplace</a>
+                </li>
+
+                {# Role-based links #}
+                {% if is_producer %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'inventory:producer_products' %}">Producer</a>
+                </li>
+                {% endif %}
+
+                {% if is_admin %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/">Admin</a>
+                </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:accounts_home' %}">Account</a>
+                </li>
+
+                {# Categories only if provided in context (Marketplace pages usually have it) #}
+                {% if categories %}
+                <li class="nav-item dropdown d-none d-lg-block">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Categories
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for c in categories %}
+                        <li>
+                            <a class="dropdown-item" href="{% url 'marketplace:category' c.name|lower|slugify %}">
+                                {{ c.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+
+            {# MIDDLE/RIGHT: Search (works anywhere; if categories/q not present it still renders) #}
+            <form class="d-flex gap-2 me-lg-3 mb-2 mb-lg-0" action="{% url 'marketplace:search' %}" method="get">
+                <input class="form-control" name="q" placeholder="Search products..." value="{{ q|default:'' }}">
+                <button class="ui-btn ui-btn--primary ui-btn--sm" type="submit">Search</button>
+            </form>
+
+            {# RIGHT: Auth + user menu #}
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+
+                {% if is_logged_in %}
+                <div class="dropdown">
+                    <button class="ui-btn ui-btn--outline ui-btn--sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ current_user.full_name|default:current_user.email|default:"Account" }}
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'accounts:accounts_home' %}">My account</a></li>
+
+                        {% if is_producer %}
+                        <li><a class="dropdown-item" href="{% url 'inventory:producer_products' %}">Producer dashboard</a></li>
+                        {% endif %}
+
+                        {% if is_admin %}
+                        <li><a class="dropdown-item" href="/admin/">Django admin</a></li>
+                        {% endif %}
+
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}">Logout</a></li>
+                    </ul>
+                </div>
+
+                {% else %}
+                <a class="ui-btn ui-btn--outline ui-btn--sm" href="{% url 'accounts:login' %}">Login</a>
+
+                <div class="dropdown">
+                    <button class="ui-btn ui-btn--primary ui-btn--sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Sign up
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'accounts:customer_register' %}">Customer</a></li>
+                        <li><a class="dropdown-item" href="{% url 'accounts:producer_register' %}">Producer</a></li>
+                        {# İstersen admin register da açarız ama genelde public olmaz #}
+                    </ul>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</nav>

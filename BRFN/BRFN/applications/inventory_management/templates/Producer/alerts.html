@@ -1,0 +1,70 @@
+{% extends "SharedComponents/base.html" %}
+{% block title %}Producer • Alerts{% endblock %}
+
+{% block content %}
+
+<div class="row g-3">
+    <aside class="col-12 col-lg-3">
+        {% include "partials/sidebar_producer.html" %}
+    </aside>
+
+    <section class="col-12 col-lg-9">
+
+        <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+            <div>
+                <h1 class="h4 mb-1">Low stock alerts</h1>
+                <div class="ui-muted small">Products with stock ≤ {{ low_stock_threshold }}.</div>
+            </div>
+            <a class="ui-btn ui-btn--outline ui-btn--sm" href="{% url 'inventory:producer_products' %}">Back</a>
+        </div>
+
+        {% if products %}
+        <div class="card ui-card">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Stock</th>
+                            <th>Availability</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in products %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ p.name }}</div>
+                                <div class="ui-muted small">{{ p.category.name }}{% if p.unit %} • {{ p.unit.name }}{% endif %}</div>
+                            </td>
+                            <td class="fw-semibold">
+                                {% if p.stock %}{{ p.stock.quantity }}{% else %}—{% endif %}
+                                <span class="ui-badge ui-badge--warning ms-2">Low</span>
+                            </td>
+                            <td>
+                                {% include "partials/availability_badge.html" with availability=p.availability %}
+                            </td>
+                            <td class="text-end">
+                                <a class="ui-btn ui-btn--outline ui-btn--sm" href="{% url 'inventory:producer_product_edit' p.id %}">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% else %}
+        <div class="card ui-card">
+            <div class="card-body">
+                <div class="fw-semibold">No low stock items</div>
+                <div class="ui-muted">Everything looks good right now.</div>
+            </div>
+        </div>
+        {% endif %}
+
+    </section>
+</div>
+
+{% endblock %}
