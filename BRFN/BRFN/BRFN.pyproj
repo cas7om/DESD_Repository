@@ -75,6 +75,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="manage.py" />
+    <Compile Include="seed_products.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="applications\account_management\templates\accounts.html" />
@@ -105,6 +106,7 @@
     <Content Include="applications\order_management\templates\order_management\cart.html" />
     <Content Include="applications\order_management\templates\order_management\checkout.html" />
     <Content Include="applications\order_management\templates\order_management\confirmation.html" />
+    <Content Include="db\init\010_restore_seed.sh" />
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />
     <Content Include="static\brfn.css" />
@@ -135,6 +137,8 @@
     <Folder Include="applications\order_management\templates\" />
     <Folder Include="applications\order_management\templates\order_management\" />
     <Folder Include="config\" />
+    <Folder Include="db\" />
+    <Folder Include="db\init\" />
     <Folder Include="static\" />
     <Folder Include="templates\" />
     <Folder Include="templates\SharedComponents\" />
