@@ -1,4 +1,4 @@
-SM
+SM EFE I finished postdeploy main idea 
 **To run the project for the first time, run:**
 
 > docker compose up --build
