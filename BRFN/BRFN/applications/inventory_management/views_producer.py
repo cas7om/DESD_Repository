@@ -8,7 +8,7 @@ from config.constants import SESSION_USER_ID_KEY
 from config.decorators import login_required
 
 from applications.account_management.models import Business
-from .models import Product, StockItem, ProductCategory, Unit, ProduceAvailability
+from .models import Product, StockItem, ProductCategory, Unit, ProduceAvailability, Allergen, ProductAllergen
 
 LOW_STOCK_THRESHOLD = Decimal("10")
 
@@ -29,6 +29,9 @@ def _ensure_inventory_lookups():
     if not ProduceAvailability.objects.exists():
         ProduceAvailability.objects.get_or_create(name="Available", defaults={"is_available": True})
         ProduceAvailability.objects.get_or_create(name="Unavailable", defaults={"is_available": False})
+    for name in ["Milk", "Nuts", "Gluten"]:
+        Allergen.objects.get_or_create(name=name)
+
 
 
 def _parse_decimal(value: str, field_name: str, places: int = 2) -> Decimal:
@@ -103,6 +106,7 @@ def producer_product_new(request):
         availability_id = request.POST.get("availability")
         price_raw = request.POST.get("price")
         stock_raw = request.POST.get("stock")
+        allergen_ids = [int(a) for a in request.POST.getlist("allergens[]")]
 
         errors = []
         if not name:
@@ -149,6 +153,9 @@ def producer_product_new(request):
                         product=product,
                         defaults={"quantity": stock_qty},
                     )
+                    for a in allergen_ids:
+                        ProductAllergen.objects.update_or_create(product=product, allergen_id=a)
+
                 messages.success(request, "Product created successfully.")
                 return redirect("inventory:producer_products")
             except IntegrityError:
@@ -160,6 +167,7 @@ def producer_product_new(request):
         "units": Unit.objects.order_by("name"),
         "availabilities": ProduceAvailability.objects.order_by("name"),
         "low_stock_threshold": LOW_STOCK_THRESHOLD,
+        "allergens": Allergen.objects.all()
     })
 
 
@@ -185,6 +193,7 @@ def producer_product_edit(request, pk: int):
         availability_id = request.POST.get("availability")
         price_raw = request.POST.get("price")
         stock_raw = request.POST.get("stock")
+        allergen_ids = [int(a) for a in request.POST.getlist("allergens[]")]
 
         errors = []
         if not name:
@@ -230,6 +239,9 @@ def producer_product_edit(request, pk: int):
                         defaults={"quantity": stock_qty},
                     )
 
+                    for a in allergen_ids:
+                        ProductAllergen.objects.update_or_create(product=product, allergen_id=a)
+
                 messages.success(request, "Product updated successfully.")
                 return redirect("inventory:producer_products")
             except IntegrityError:
@@ -242,6 +254,8 @@ def producer_product_edit(request, pk: int):
         "units": Unit.objects.order_by("name"),
         "availabilities": ProduceAvailability.objects.order_by("name"),
         "low_stock_threshold": LOW_STOCK_THRESHOLD,
+        "allergens": Allergen.objects.all(),
+        "product_allergens": ProductAllergen.objects.filter(product=product).values_list("allergen_id", flat=True)
     })
 
 

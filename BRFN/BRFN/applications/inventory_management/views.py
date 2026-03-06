@@ -7,6 +7,7 @@ from .models import (
     Allergen,
     Product,
     ProductCategory,
+    ProductAllergen
 )
 
 from .forms import SaveAllergenForm
@@ -14,6 +15,10 @@ from .forms import SaveAllergenForm
 
 def inventory_home(request):
     return render(request, "inventory.html")
+
+def _ensure_lookups():
+    for name in ["Milk", "Nuts", "Gluten"]:
+        Allergen.objects.get_or_create(name=name)
 
 
 @admin_required
@@ -109,10 +114,11 @@ def market_search(request):
 
 
 def market_product_detail(request, pid):
+    _ensure_lookups()
     categories = list(_categories_qs())
     p = get_object_or_404(_marketplace_qs(), pk=pid)
 
-    allergens = [pa.allergen.name for pa in p.productallergen_set.all() if pa.allergen_id]
+    allergens = (ProductAllergen.objects.filter(product=p).values_list("allergen__name", flat=True))
 
     return render(
         request,
