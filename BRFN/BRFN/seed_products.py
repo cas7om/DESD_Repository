@@ -1,10 +1,72 @@
-from applications.account_management.models import Business
+from django.contrib.auth.hashers import make_password
+from applications.account_management.models import (
+    Business, User, Role, UserRole, Address, UserAddress
+)
 from applications.inventory_management.models import (
     ProductCategory,
     Unit,
     ProduceAvailability,
     Product,
     StockItem,
+)
+
+#Producer 1
+contact_user, _ = User.objects.get_or_create(
+    email="pproducer@test.com",
+    defaults={
+        "full_name": "Peter Producer",
+        "phone_no": "0123456789",
+        "password_hash": make_password("Hello1234!"),
+    },
+)
+
+producer_role, _ = Role.objects.get_or_create(name="Producer")
+UserRole.objects.get_or_create(user=contact_user, role=producer_role)
+
+business_addr, _ = Address.objects.get_or_create(
+    line1="1 Test Close",
+    line2="Test Town",
+    line3="",
+    postcode="BS1 1AA",
+)
+
+UserAddress.objects.get_or_create(user=contact_user, address=business_addr)
+
+Business.objects.get_or_create(
+    business_name="Peter's Produce",
+    defaults={
+        "address": business_addr,
+        "contact_user": contact_user,
+    },
+)
+
+#Producer 2
+contact_user, _ = User.objects.get_or_create(
+    email="farmer_tim@test.com",
+    defaults={
+        "full_name": "Tim Farmer",
+        "phone_no": "0987654321",
+        "password_hash": make_password("Hello1234!"),
+    },
+)
+
+UserRole.objects.get_or_create(user=contact_user, role=producer_role)
+
+business_addr, _ = Address.objects.get_or_create(
+    line1="110 Test Lane",
+    line2="Test Town",
+    line3="",
+    postcode="BS2 1AB",
+)
+
+UserAddress.objects.get_or_create(user=contact_user, address=business_addr)
+
+Business.objects.get_or_create(
+    business_name="Tim's Tomatoes",
+    defaults={
+        "address": business_addr,
+        "contact_user": contact_user,
+    },
 )
 
 veg, _ = ProductCategory.objects.get_or_create(name="Vegetables")
@@ -32,8 +94,8 @@ if unavailable.is_available:
     unavailable.is_available = False
     unavailable.save()
 
-business1 = Business.objects.filter(business_name="Green Valley Farm").first()
-business2 = Business.objects.filter(business_name="Sunny Fields Produce").first()
+business1 = Business.objects.filter(business_name="Peter's Produce").first()
+business2 = Business.objects.filter(business_name="Tim's Tomatoes").first()
 
 if not business1 or not business2:
     raise Exception("Both producer businesses must exist first. Create the 2 producer accounts from the website before running this script.")
