@@ -1,0 +1,299 @@
+{% extends "SharedComponents/base.html" %}
+{% block title %}My Order History{% endblock %}
+
+{% block content %}
+<style>
+    .order-history-page {
+        max-width: 1180px;
+        margin: 28px auto 48px auto;
+        padding: 0 8px;
+    }
+
+    .order-history-title {
+        font-size: 56px;
+        font-weight: 800;
+        color: #111827;
+        line-height: 1.1;
+        margin-bottom: 6px;
+    }
+
+    .order-history-subtitle {
+        font-size: 18px;
+        color: #6b7280;
+        margin-bottom: 18px;
+    }
+
+    .oh-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        margin-bottom: 18px;
+    }
+
+    .oh-card-body {
+        padding: 18px;
+    }
+
+    .oh-filter-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr 1fr 170px;
+        gap: 14px;
+        align-items: end;
+    }
+
+    .oh-label {
+        display: block;
+        font-size: 15px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 8px;
+    }
+
+    .oh-input {
+        width: 100%;
+        height: 48px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        padding: 0 14px;
+        font-size: 16px;
+        background: #fff;
+        color: #111827;
+    }
+
+    .oh-btn {
+        width: 100%;
+        height: 48px;
+        border: none;
+        border-radius: 12px;
+        background: #111827;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .oh-btn:hover {
+            background: #1f2937;
+        }
+
+    .oh-table-wrap {
+        overflow-x: auto;
+    }
+
+    .oh-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 950px;
+    }
+
+        .oh-table thead th {
+            background: #f9fafb;
+            color: #111827;
+            font-size: 15px;
+            font-weight: 800;
+            padding: 16px 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .oh-table tbody td {
+            padding: 16px 14px;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 16px;
+            color: #111827;
+            vertical-align: middle;
+        }
+
+        .oh-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    .oh-order-ref {
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .oh-total {
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .oh-status {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    .oh-status-pending {
+        background: #facc15;
+        color: #111827;
+    }
+
+    .oh-status-confirmed {
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+    .oh-status-ready {
+        background: #22d3ee;
+        color: #111827;
+    }
+
+    .oh-status-delivered {
+        background: #16a34a;
+        color: #ffffff;
+    }
+
+    .oh-status-default {
+        background: #6b7280;
+        color: #ffffff;
+    }
+
+    .oh-view-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        border: 1px solid #111827;
+        border-radius: 10px;
+        background: #fff;
+        color: #111827;
+        text-decoration: none;
+        font-weight: 700;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+        .oh-view-btn:hover {
+            background: #111827;
+            color: #fff;
+        }
+
+    .oh-empty {
+        padding: 24px 18px;
+        color: #4b5563;
+        font-size: 17px;
+    }
+
+    @media (max-width: 992px) {
+        .oh-filter-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .order-history-title {
+            font-size: 42px;
+        }
+    }
+</style>
+
+<div class="order-history-page">
+    <h1 class="order-history-title">My Order History</h1>
+    <div class="order-history-subtitle">
+        Signed in as
+        <strong>
+            {{ current_user.full_name|default:request.session.full_name|default:"Customer" }}
+        </strong>
+    </div>
+
+    <div class="oh-card">
+        <div class="oh-card-body">
+            <form method="get" class="oh-filter-grid">
+                <div>
+                    <label class="oh-label">Producer</label>
+                    <input type="text"
+                           name="producer"
+                           value="{{ producer_filter }}"
+                           class="oh-input"
+                           placeholder="Filter by producer">
+                </div>
+
+                <div>
+                    <label class="oh-label">Start date</label>
+                    <input type="date"
+                           name="start"
+                           value="{{ start_date }}"
+                           class="oh-input">
+                </div>
+
+                <div>
+                    <label class="oh-label">End date</label>
+                    <input type="date"
+                           name="end"
+                           value="{{ end_date }}"
+                           class="oh-input">
+                </div>
+
+                <div>
+                    <button type="submit" class="oh-btn">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="oh-card">
+        {% if rows %}
+        <div class="oh-table-wrap">
+            <table class="oh-table">
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Placed</th>
+                        <th>Delivery</th>
+                        <th>Producers</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th style="text-align:right;">&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td class="oh-order-ref">{{ row.order.order_ref }}</td>
+                        <td>
+                            {% if row.order.created_at %}
+                            {{ row.order.created_at|date:"d M Y H:i" }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.order.delivery_date %}
+                            {{ row.order.delivery_date|date:"d M Y H:i" }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                        <td>{{ row.producer_names|join:", " }}</td>
+                        <td class="oh-total">&pound;{{ row.order.confirmed_price|default:"0.00" }}</td>
+                        <td>
+                            {% if row.overall_status == "Pending" %}
+                            <span class="oh-status oh-status-pending">Pending</span>
+                            {% elif row.overall_status == "Confirmed" %}
+                            <span class="oh-status oh-status-confirmed">Confirmed</span>
+                            {% elif row.overall_status == "Ready" %}
+                            <span class="oh-status oh-status-ready">Ready</span>
+                            {% elif row.overall_status == "Delivered" %}
+                            <span class="oh-status oh-status-delivered">Delivered</span>
+                            {% else %}
+                            <span class="oh-status oh-status-default">{{ row.overall_status }}</span>
+                            {% endif %}
+                        </td>
+                        <td style="text-align:right;">
+                            <a href="{% url 'orders:customer_order_detail' row.order.order_ref %}" class="oh-view-btn">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="oh-empty">No customer order history found.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

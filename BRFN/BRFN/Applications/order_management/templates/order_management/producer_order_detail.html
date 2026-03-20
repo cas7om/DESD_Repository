@@ -1,0 +1,98 @@
+{% extends "SharedComponents/base.html" %}
+{% block title %}Producer Order Detail{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    {% include "SharedComponents/base_title.html" with title="Order "|add:portion.order.order_ref %}
+    <a class="btn btn-outline-dark" href="{% url 'orders:producer_inbox' %}">Back to inbox</a>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-lg-4">
+        <div class="card ui-card h-100">
+            <div class="card-body">
+                <h2 class="h6">Customer details</h2>
+                <div><strong>Name:</strong> {{ portion.order.customer.full_name }}</div>
+                <div><strong>Email:</strong> {{ portion.order.customer.email }}</div>
+                <div><strong>Phone:</strong> {{ portion.order.customer.phone_no }}</div>
+                <div class="mt-2"><strong>Delivery address:</strong></div>
+                <div class="text-muted">{{ payment.address|default:"Not recorded" }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card ui-card h-100">
+            <div class="card-body">
+                <h2 class="h6">Order details</h2>
+                <div><strong>Status:</strong> {{ portion.status.name }}</div>
+                <div><strong>Placed:</strong> {{ portion.order.created_at|date:"d M Y H:i" }}</div>
+                <div><strong>Delivery:</strong> {{ portion.delivery_date|date:"d M Y H:i" }}</div>
+                <div><strong>Subtotal:</strong> £{{ subtotal }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card ui-card h-100">
+            <div class="card-body">
+                <h2 class="h6">Update status</h2>
+                <form method="post" action="{% url 'orders:producer_order_update_status' portion.id %}">
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label class="form-label">Next status</label>
+                        <select class="form-select" name="status" {% if not next_statuses %}disabled{% endif %}>
+                            {% for status_name in next_statuses %}
+                            <option value="{{ status_name }}">{{ status_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Producer note</label>
+                        <textarea class="form-control" name="note" rows="3" placeholder="Products will be prepared by delivery date"></textarea>
+                    </div>
+                    <button class="btn btn-dark" {% if not next_statuses %}disabled{% endif %}>Save update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card ui-card mb-3">
+    <div class="card-body">
+        <h2 class="h6">Items for {{ portion.business.business_name }}</h2>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead><tr><th>Product</th><th>Qty</th><th>Unit price</th><th>Total</th></tr></thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>£{{ item.unit_price }}</td>
+                        <td>£{{ item.line_total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card ui-card">
+    <div class="card-body">
+        <h2 class="h6">Status timeline</h2>
+        {% if portion.audits.all %}
+        <ul class="list-group list-group-flush">
+            {% for audit in portion.audits.all %}
+            <li class="list-group-item px-0">
+                <strong>{% if audit.from_status %}{{ audit.from_status.name }} → {% endif %}{{ audit.to_status.name }}</strong>
+                <div class="text-muted small">{{ audit.updated_on|date:"d M Y H:i" }} by {{ audit.updated_by.full_name }}</div>
+                {% if audit.note %}<div class="small">{{ audit.note }}</div>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div class="text-muted">No audit entries yet.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "SharedComponents/base.html" %}
+{% block title %}Order {{ order.order_ref }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    {% include "SharedComponents/base_title.html" with title="Order "|add:order.order_ref %}
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-dark" href="{% url 'orders:customer_history' %}">Back</a>
+        <form method="post" action="{% url 'orders:reorder_order' order.order_ref %}">
+            {% csrf_token %}
+            <button class="btn btn-dark">Reorder</button>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-12 col-lg-4">
+        <div class="card ui-card h-100">
+            <div class="card-body">
+                <h2 class="h6">Order summary</h2>
+                <div><strong>Status:</strong> {{ overall_status }}</div>
+                <div><strong>Placed:</strong> {{ order.created_at|date:"d M Y H:i" }}</div>
+                <div><strong>Delivery:</strong> {{ order.delivery_date|date:"d M Y H:i" }}</div>
+                <div><strong>Subtotal:</strong> £{{ subtotal }}</div>
+                <div><strong>Commission:</strong> £{{ commission }}</div>
+                <div><strong>Total:</strong> £{{ total }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card ui-card h-100">
+            <div class="card-body">
+                <h2 class="h6">Delivery</h2>
+                <div><strong>Address:</strong></div>
+                <div class="text-muted">{{ payment.address|default:"Not recorded" }}</div>
+                <div class="mt-2"><strong>Instructions:</strong></div>
+                <div class="text-muted">{{ payment.instructions|default:"-" }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card ui-card h-100">
+            <div class="card-body">
+                <h2 class="h6">Payment</h2>
+                <div><strong>Status:</strong> {{ payment.payment_status|default:"TEST MODE" }}</div>
+                <div><strong>Reference:</strong> {{ payment.payment_ref_masked|default:"-" }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for section in producer_sections %}
+<div class="card ui-card mb-3">
+    <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <div>
+                <h2 class="h5 mb-1">{{ section.business.business_name }}</h2>
+                <div class="text-muted">Status: {{ section.status }}{% if section.delivery_date %} • Delivery: {{ section.delivery_date|date:"d M Y H:i" }}{% endif %}</div>
+            </div>
+            <div><strong>Producer subtotal:</strong> £{{ section.subtotal }}</div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead><tr><th>Product</th><th>Qty</th><th>Unit price</th><th>Total</th></tr></thead>
+                <tbody>
+                    {% for item in section.items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>£{{ item.unit_price }}</td>
+                        <td>£{{ item.line_total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if section.audits %}
+        <h3 class="h6 mt-3">Status timeline</h3>
+        <ul class="list-group list-group-flush">
+            {% for audit in section.audits %}
+            <li class="list-group-item px-0">
+                <strong>{% if audit.from_status %}{{ audit.from_status.name }} → {% endif %}{{ audit.to_status.name }}</strong>
+                <div class="text-muted small">{{ audit.updated_on|date:"d M Y H:i" }} by {{ audit.updated_by.full_name }}</div>
+                {% if audit.note %}<div class="small">{{ audit.note }}</div>{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

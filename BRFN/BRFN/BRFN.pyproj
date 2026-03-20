@@ -60,13 +60,16 @@
     <Compile Include="applications\order_management\models.py" />
     <Compile Include="applications\order_management\tests.py" />
     <Compile Include="applications\order_management\urls.py" />
-    <Compile Include="applications\order_management\views.py" />
+    <Compile Include="..\..\..\..\..\OneDrive\Masaüstü\ss\views.py">
+      <Link>applications\order_management\views.py</Link>
+    </Compile>
     <Compile Include="applications\order_management\__init__.py" />
     <Compile Include="applications\__init__.py" />
     <Compile Include="config\asgi.py" />
     <Compile Include="config\constants.py" />
     <Compile Include="config\decorators.py" />
     <Compile Include="config\forms.py" />
+    <Compile Include="config\helpers.py" />
     <Compile Include="config\settings.py" />
     <Compile Include="config\urls.py" />
     <Compile Include="config\wsgi.py" />
@@ -106,6 +109,7 @@
     <Content Include="applications\order_management\templates\order_management\cart.html" />
     <Content Include="applications\order_management\templates\order_management\checkout.html" />
     <Content Include="applications\order_management\templates\order_management\confirmation.html" />
+    <Content Include="applications\order_management\templates\order_management\customer_order_history.html" />
     <Content Include="db\init\010_restore_seed.sh" />
     <Content Include="docker-compose.yml" />
     <Content Include="README.md" />

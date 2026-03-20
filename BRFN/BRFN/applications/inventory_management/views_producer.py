@@ -271,4 +271,4 @@ def producer_alerts(request):
 
 @login_required
 def producer_orders(request):
-    return render(request, "Producer/orders.html")
+    return redirect("orders:producer_inbox")

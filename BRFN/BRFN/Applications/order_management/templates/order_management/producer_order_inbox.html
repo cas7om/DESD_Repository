@@ -1,0 +1,65 @@
+{% extends "SharedComponents/base.html" %}
+{% block title %}Incoming Orders{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    {% include "SharedComponents/base_title.html" with title="Incoming Orders" %}
+    <a class="btn btn-outline-dark" href="{% url 'inventory:producer_products' %}">Back to products</a>
+</div>
+
+<div class="card ui-card mb-3">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-12 col-md-4">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All statuses</option>
+                    {% for status_name in status_options %}
+                    <option value="{{ status_name }}">{{ status_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-2 d-grid">
+                <button class="btn btn-dark">Apply</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if rows %}
+<div class="card ui-card">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Created</th>
+                    <th>Delivery</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td><strong>{{ row.portion.order.order_ref }}</strong></td>
+                    <td>{{ row.customer.full_name }}</td>
+                    <td>{{ row.portion.order.created_at|date:"d M Y H:i" }}</td>
+                    <td>{{ row.portion.delivery_date|date:"d M Y H:i" }}</td>
+                    <td>{{ row.item_count }}</td>
+                    <td>�{{ row.subtotal }}</td>
+                    <td><span class="badge text-bg-secondary">{{ row.portion.status.name }}</span></td>
+                    <td class="text-end"><a class="btn btn-sm btn-outline-dark" href="{% url 'orders:producer_order_detail' row.portion.id %}">View</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info">No orders found for this producer and filter.</div>
+{% endif %}
+{% endblock %}
